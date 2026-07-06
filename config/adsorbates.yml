@@ -1,0 +1,92 @@
+version: 1
+description: "Registry of available finetuned adsorbate checkpoints."
+checkpoint_root: "data/finetune_model"
+checkpoint_dir_template: "data/finetune_model/checkpoint-{adsorbate}"
+checkpoint_type: "lora_adapter"
+required_files:
+  - "adapter_config.json"
+  - "adapter_model.safetensors"
+  - "tokenizer.json"
+  - "tokenizer_config.json"
+  - "special_tokens_map.json"
+total_adsorbates: 79
+adsorbates:
+  - {name: "C", formula: "C", enabled: true}
+  - {name: "CC", formula: "C2", enabled: true}
+  - {name: "CCH", formula: "C2H", enabled: true}
+  - {name: "CCH2", formula: "C2H2", enabled: true}
+  - {name: "CCH2OH", formula: "C2H3O", enabled: true}
+  - {name: "CCH3", formula: "C2H3", enabled: true}
+  - {name: "CCHO", formula: "C2HO", enabled: true}
+  - {name: "CCHOH", formula: "C2H2O", enabled: true}
+  - {name: "CCO", formula: "C2O", enabled: true}
+  - {name: "CH", formula: "CH", enabled: true}
+  - {name: "CH2", formula: "CH2", enabled: true}
+  - {name: "CH2CH2OH", formula: "C2H5O", enabled: true}
+  - {name: "CH2CH3", formula: "C2H5", enabled: true}
+  - {name: "CH2CO", formula: "C2H2O", enabled: true}
+  - {name: "CH2O", formula: "CH2O", enabled: true}
+  - {name: "CH2OH", formula: "CH3O", enabled: true}
+  - {name: "CH3", formula: "CH3", enabled: true}
+  - {name: "CH4", formula: "CH4", enabled: true}
+  - {name: "CHCH", formula: "C2H2", enabled: true}
+  - {name: "CHCH2", formula: "C2H3", enabled: true}
+  - {name: "CHCH2OH", formula: "C2H4O", enabled: true}
+  - {name: "CHCHO", formula: "C2H2O", enabled: true}
+  - {name: "CHCHOH", formula: "C2H3O", enabled: true}
+  - {name: "CHCO", formula: "C2HO", enabled: true}
+  - {name: "CHCOH", formula: "C2H2O", enabled: true}
+  - {name: "CHO", formula: "CHO", enabled: true}
+  - {name: "CHOCH2OH", formula: "C2H4O2", enabled: true}
+  - {name: "CHOCHO", formula: "C2H2O2", enabled: true}
+  - {name: "CHOCHOH", formula: "C2H3O2", enabled: true}
+  - {name: "CHOH", formula: "CH2O", enabled: true}
+  - {name: "CHOHCH2", formula: "C2H4O", enabled: true}
+  - {name: "CHOHCH2OH", formula: "C2H5O2", enabled: true}
+  - {name: "CHOHCH3", formula: "C2H5O", enabled: true}
+  - {name: "CHOHCHOH", formula: "C2H4O2", enabled: true}
+  - {name: "CN", formula: "CN", enabled: true}
+  - {name: "COCH2O", formula: "C2H2O2", enabled: true}
+  - {name: "COCH2OH", formula: "C2H3O2", enabled: true}
+  - {name: "COCH3", formula: "C2H3O", enabled: true}
+  - {name: "COCHO", formula: "C2HO2", enabled: true}
+  - {name: "COH", formula: "CHO", enabled: true}
+  - {name: "COHCH2OH", formula: "C2H4O2", enabled: true}
+  - {name: "COHCH3", formula: "C2H4O", enabled: true}
+  - {name: "COHCHO", formula: "C2H2O2", enabled: true}
+  - {name: "COHCHOH", formula: "C2H3O2", enabled: true}
+  - {name: "COHCOH", formula: "C2H2O2", enabled: true}
+  - {name: "H", formula: "H", enabled: true}
+  - {name: "N", formula: "N", enabled: true}
+  - {name: "N2", formula: "N2", enabled: true}
+  - {name: "NH", formula: "HN", enabled: true}
+  - {name: "NH2", formula: "H2N", enabled: true}
+  - {name: "NH2N(CH3)2", formula: "C2H8N2", enabled: true}
+  - {name: "NH3", formula: "H3N", enabled: true}
+  - {name: "NHNH", formula: "H2N2", enabled: true}
+  - {name: "NNH", formula: "HN2", enabled: true}
+  - {name: "NNO", formula: "N2O", enabled: true}
+  - {name: "NO", formula: "NO", enabled: true}
+  - {name: "NO2", formula: "NO2", enabled: true}
+  - {name: "NO2NO2", formula: "N2O4", enabled: true}
+  - {name: "NO3", formula: "NO3", enabled: true}
+  - {name: "NONH", formula: "HN2O", enabled: true}
+  - {name: "O", formula: "O", enabled: true}
+  - {name: "OCH2CH3", formula: "C2H5O", enabled: true}
+  - {name: "OCH2CHOH", formula: "C2H4O2", enabled: true}
+  - {name: "OCH3", formula: "CH3O", enabled: true}
+  - {name: "OCHCH3", formula: "C2H4O", enabled: true}
+  - {name: "OH", formula: "HO", enabled: true}
+  - {name: "OH2", formula: "H2O", enabled: true}
+  - {name: "OHCH2CH3", formula: "C2H6O", enabled: true}
+  - {name: "OHCH3", formula: "CH4O", enabled: true}
+  - {name: "OHNH2", formula: "H3NO", enabled: true}
+  - {name: "OHNNCH3", formula: "CH4N2O", enabled: true}
+  - {name: "ONH", formula: "HNO", enabled: true}
+  - {name: "ONN(CH3)2", formula: "C2H6N2O", enabled: true}
+  - {name: "ONNH2", formula: "H2N2O", enabled: true}
+  - {name: "ONOH", formula: "HNO2", enabled: true}
+  - {name: "CO", formula: "CO", enabled: true}
+  - {name: "CH2CH2", formula: "C2H4", enabled: true}
+  - {name: "NNCH3", formula: "H3CN2", enabled: true}
+  - {name: "ONNO2", formula: "N2O3", enabled: true}

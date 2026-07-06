@@ -1,0 +1,73 @@
+experiment:
+    adsorbate: "CH2CH3"
+    name_template: "oc20-2M-finetune-{adsorbate}"
+
+paths:
+    dataset_dir: "data/dataset"
+    train_data_template: "finetune_{adsorbate}_train.csv"
+    val_data_template: "finetune_{adsorbate}_val.csv"
+    output_dir_template: "outputs/finetune_{adsorbate}"
+    generation_dir_name: "generated"
+    analysis_dir_name: "analysis"
+
+generation:
+    n_generation: 100
+    batch_size_cpu: 8
+    batch_size_cuda: 256
+    top_k: 30
+    top_p: 0.9
+    temperature: 1.0
+    dtype: "int32"
+
+mlp:
+    model_name: "EquiformerV2-31M-S2EF-OC20-All+MD"
+    model_cache: "MLP_check/OC20_MLP/MLP_model"
+
+model_params:
+    # Filled from experiment.name_template at runtime.
+    name: 'oc20-2M-finetune-CH2CH3'
+    architecture : 'GPT'
+    use_pretrained : True
+    use_lora : True
+    use_numerical_encoding : False
+    
+    n_positions: 1024
+    n_embd: 512
+    n_layer: 12
+    n_head: 8
+    n_epochs: 1
+    d_inner: 1024
+    
+    # for PML
+    noise_density: 0.15
+    mean_span: 3
+    
+    # pretrained 
+    checkpoint_path: "checkpoint-GPT-2M/checkpoint-138890/"
+    
+    # lora
+    r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+    task_type: 'CAUSAL_LM'
+    
+data_params:
+    string_type: 'coordinate'
+    augment_type: 'normal'
+    add_props: False
+    do_condition: False
+    condition_column: 'energy'
+
+    # hyperparamete
+    num_epochs: 10
+    max_len: 1024
+    batch_size: 48
+    gradient_accumulation_steps: 3
+    learning_rate: 1e-4
+    warmup_steps: 20
+    
+    # etc
+    eval_steps: 25
+    tf32: False
+    num_workers: 1
+    use_hf_datasets: False

@@ -1,0 +1,48 @@
+reaction_workflow:
+    run_name: "co2rr_c1_minimal"
+    output_root: "outputs/reaction_workflows"
+
+    adsorbate_registry: "config/adsorbates.yml"
+    workflow_template: "config/workflow_config.yml"
+    adsorbates:
+        - "CHO"
+        - "CH2O"
+        - "OCH3"
+        - "CH3"
+
+    target_shared_material_count: 1
+    shared_material:
+        target_success_per_adsorbate_per_material: 1
+
+    per_adsorbate:
+        target_success_count: 5
+        max_rounds: 3
+        generation_per_round: 20
+
+    fine_tune:
+        enabled: false
+        require_existing_checkpoint: true
+
+    device:
+        generation: "cpu"
+        mlp: "cpu"
+
+    generation:
+        batch_size: 8
+        max_length: 512
+        top_k: 30
+        top_p: 0.9
+        temperature: 1.0
+
+    material_query:
+        mode: "any"
+        elements: []
+
+    filters:
+        require_adsorbate_valid: true
+        mlp_energy_lt: 0.0
+
+    duplicate_check:
+        enabled: false
+
+    keep_failed_structures: false

@@ -1,0 +1,51 @@
+Recommended environment for the agent-ready workflow:
+
+  conda config --set channel_priority flexible
+  conda env create -f envs/autocata.yml
+  conda activate autocata
+
+If PyG packages fail during `conda env create`, create the base environment first
+and install PyG manually:
+
+  1. Temporarily comment out or remove these PyG lines from `envs/autocata.yml`:
+
+     - --find-links https://data.pyg.org/whl/torch-2.4.0+cu121.html
+     - pyg_lib
+     - torch_scatter
+     - torch_sparse
+     - torch_cluster
+     - torch_spline_conv
+     - torch-geometric
+
+  2. Recreate the environment:
+
+     conda env remove -n autocata
+     conda env create -f envs/autocata.yml
+
+  3. Install PyG manually:
+
+  conda activate autocata
+  pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv torch-geometric -f https://data.pyg.org/whl/torch-2.4.0+cu121.html
+
+Basic checks:
+
+  python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+  python -c "import transformers, peft, omegaconf, ase, pymatgen; print('catgpt deps ok')"
+  python -c "from fairchem.core.common.relaxation.ase_utils import OCPCalculator; print('fairchem ok')"
+
+If `fairchem` fails on Python 3.9 with an annotation error mentioning
+`eval_type_backport`, run:
+
+  pip install eval_type_backport
+
+Project smoke checks from `autocata`:
+
+  python workflow_runner.py --workflow-config config/workflow_config.yml --dry-run
+  python script/generate.py --help
+  python script/ASE_check_manual.py --help
+  python script/index_xyz_metadata.py --help
+  python MLP_check/OC20_MLP/mlp_scores.py --help
+
+Use this environment name in OpenClaw instructions:
+
+  conda activate autocata

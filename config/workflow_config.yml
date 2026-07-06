@@ -1,0 +1,39 @@
+workflow:
+    adsorbate: "CH3"
+    target_success_count: 1000
+    max_rounds: 100
+    generation_per_round: 1000
+    output_root: "outputs/workflows"
+    run_name: "ch3_unrestricted_cuda_e0"
+    adsorbate_registry: "config/adsorbates.yml"
+
+    fine_tune:
+        enabled: false
+        require_existing_checkpoint: true
+
+    device:
+        generation: "cuda"
+        mlp: "cuda"
+
+    generation:
+        batch_size: 128
+        max_length: 512
+        top_k: 30
+        top_p: 0.9
+        temperature: 1.0
+
+    material_query:
+        mode: "any"
+        elements: []
+
+    filters:
+        require_adsorbate_valid: true
+        mlp_energy_lt: 0.0
+
+    duplicate_check:
+        enabled: false
+
+    viewer:
+        auto_open: false
+
+    keep_failed_structures: false

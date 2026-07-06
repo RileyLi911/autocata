@@ -1,0 +1,32 @@
+conda create -n ocp_mlp python=3.9 -y
+
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
+
+pip install -U pip
+
+pip install ase pyyaml tqdm lmdb numpy
+
+git clone https://github.com/Open-Catalyst-Project/ocp.git
+
+pip install "fairchem-core==1.10"
+
+python - <<'EOF'
+import torch, subprocess, sys
+ver = torch.__version__.split('+')[0]
+url = f"https://data.pyg.org/whl/torch-{ver}+cu121.html"
+print("Installing torch_scatter from:", url)
+subprocess.check_call([sys.executable, "-m", "pip", "install", "torch-scatter", "-f", url])
+EOF
+
+python - <<'EOF'
+import torch, subprocess, sys
+ver = torch.__version__.split('+')[0]
+url = f"https://data.pyg.org/whl/torch-{ver}+cu121.html"
+pkgs = ["torch-sparse", "torch-cluster", "torch-spline-conv"]
+print("Installing from:", url)
+subprocess.check_call([sys.executable, "-m", "pip", "install", *pkgs, "-f", url])
+EOF
+
+
+pip install torch_geometric
+

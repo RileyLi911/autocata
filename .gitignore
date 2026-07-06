@@ -1,0 +1,40 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local environments
+.venv/
+venv/
+env/
+.conda/
+
+# Editor and local agent state
+.vscode/
+.idea/
+.openclaw/
+
+# Generated outputs and logs
+release_assets/
+outputs/
+logs/
+results/
+wandb/
+checkpoints/
+.cache/
+
+# Large/private model assets
+checkpoint-GPT-2M/
+data/finetune_model/
+MLP_check/OC20_MLP/MLP_model/
+MLP_check/**/*.pt
+MLP_check/**/*.pth
+MLP_check/**/*.ckpt
+*.safetensors
+
+# Optional local datasets
+data/dataset/
+
+# OS files
+.DS_Store
+Thumbs.db

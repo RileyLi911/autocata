@@ -1,0 +1,17 @@
+model_assets:
+  repo_id: "RileyLi911/autocata-models"
+  repo_type: "model"
+  revision: "main"
+  local_dir: "."
+  required_paths:
+    - "checkpoint-GPT-2M/checkpoint-138890"
+    - "data/finetune_model"
+    - "MLP_check/OC20_MLP/MLP_model"
+  allow_patterns:
+    - "checkpoint-GPT-2M/**"
+    - "data/finetune_model/**"
+    - "MLP_check/OC20_MLP/MLP_model/**"
+  ignore_patterns:
+    - "outputs/**"
+    - "logs/**"
+    - "wandb/**"

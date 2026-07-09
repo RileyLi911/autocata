@@ -19,6 +19,12 @@ I want CH3 as the adsorbate, Au-based catalyst materials, MLP energy < 0,
 and 5 successful structures.
 ```
 
+Energy-window requests are supported directly:
+
+```text
+Run CH3 screening with -1.5 < E_pred < -0.5.
+```
+
 Once an agent has read `SKILL.md`, `AGENTS.md`, this file, and
 `config/adsorbates.yml`, short user prompts are enough. Examples:
 
@@ -46,7 +52,17 @@ workflow:
     elements: ["Au"]
   filters:
     require_adsorbate_valid: true
+    mlp_energy_gt: null
     mlp_energy_lt: 0.0
+```
+
+For an energy window:
+
+```yaml
+workflow:
+  filters:
+    mlp_energy_gt: -1.5
+    mlp_energy_lt: -0.5
 ```
 
 ## Runner
@@ -57,11 +73,25 @@ Dry-run the planned commands:
 python workflow_runner.py --workflow-config config/workflow_config.yml --dry-run
 ```
 
+If `workflow.run_name` is set, dry-runs are written to a timestamped dry-run
+directory so that they do not pollute the production run directory.
+
 Run the MVP workflow:
 
 ```bash
 python workflow_runner.py --workflow-config config/workflow_config.yml
 ```
+
+The runner refuses to write into an existing non-empty run directory by default.
+Use a unique `workflow.run_name` for production runs. If a deliberate rerun is
+needed, pass:
+
+```bash
+python workflow_runner.py --workflow-config config/workflow_config.yml --overwrite-run-dir
+```
+
+Use `--allow-existing-run-dir` only for debugging because stale `rounds/`
+subdirectories can confuse manual inspection.
 
 Override the adsorbate:
 
@@ -138,14 +168,21 @@ The runner then filters rows by:
 
 - `adsorbate_valid == true`
 - material query match
-- `E_pred < workflow.filters.mlp_energy_lt`
+- `E_pred > workflow.filters.mlp_energy_gt` when the lower bound is set
+- `E_pred < workflow.filters.mlp_energy_lt` when the upper bound is set
 - optional duplicate check
 
 ## Reaction-Network Runner
 
 For reactions with multiple key intermediates, use the reaction-network runner.
-It reuses the single-adsorbate workflow for each adsorbate, then aggregates
-accepted structures by catalyst material.
+The recommended mode is `material_first`: generate and parse large candidate
+sets first, identify catalyst materials that appear for all selected
+adsorbates, and run MLP only on those shared-material candidates. This avoids
+spending MLP time on materials that cannot become reaction-network hits.
+
+The legacy `mlp_first` mode is still available for comparison. It reuses the
+single-adsorbate workflow for each adsorbate, then aggregates accepted
+structures by catalyst material.
 
 Dry-run:
 
@@ -169,11 +206,17 @@ The reaction config controls:
 
 ```yaml
 reaction_workflow:
+  screening_mode: "material_first"
   adsorbate_registry: "config/adsorbates.yml"
   adsorbates: ["CH3", "CHO", "OH"]
   target_shared_material_count: 1
   shared_material:
     target_success_per_adsorbate_per_material: 1
+  material_first:
+    target_shared_material_candidates: null
+    min_candidates_per_adsorbate_per_material: 1
+    max_shared_materials_for_mlp: 50
+    max_structures_per_adsorbate_per_material: 20
 ```
 
 Each child adsorbate run is written under:
@@ -187,11 +230,47 @@ The main reaction-level outputs are:
 ```text
 reaction_workflow_report.json
 adsorbate_run_summary.csv
+pre_mlp_candidates.csv
+pre_mlp_shared_material_summary.csv
+material_adsorbate_precheck_matrix.csv
+targeted_mlp_inputs.csv
+all_mlp_scored_candidates.csv
 all_success_structures.csv
 shared_material_summary.csv
 material_adsorbate_matrix.csv
 reaction_run.log
 ```
+
+In `material_first` mode, use `pre_mlp_shared_material_summary.csv` to inspect
+materials found before MLP. Use `targeted_mlp_inputs.csv` and
+`all_mlp_scored_candidates.csv` to audit which shared-material structures were
+actually sent to MLP.
+
+In `material_first` mode, the pre-MLP generation budget is controlled by:
+
+```text
+per_adsorbate.max_rounds * per_adsorbate.generation_per_round
+```
+
+`per_adsorbate.target_success_count` is kept for the legacy `mlp_first` mode.
+
+Production reaction-network runs should not use smoke-test budgets. Unless the
+user explicitly asks for a small test/debug run, start with at least 100,000
+generated structures per adsorbate:
+
+```yaml
+per_adsorbate:
+  max_rounds: 10
+  generation_per_round: 10000
+material_first:
+  target_shared_material_candidates: 100
+  max_shared_materials_for_mlp: 100
+  max_structures_per_adsorbate_per_material: 50
+```
+
+If no shared material is found after only hundreds or a few thousand generated
+structures per adsorbate, treat the result as undersampled rather than a
+negative chemical conclusion.
 
 `shared_material_summary.csv` ranks materials by how many target adsorbates
 they cover. `material_adsorbate_matrix.csv` is the most useful table for an
@@ -235,6 +314,14 @@ material, material_elements, adsorbate_valid,
 passed, failure_reason, error
 ```
 
+For statistics, trust `workflow_report.json`, `all_candidates.csv`, and
+`success_summary.csv`. Do not count directories under `rounds/` as completed
+rounds if a run directory was reused.
+
+Energy filters are applied before rows are copied to `success_summary.csv`.
+For example, `mlp_energy_gt: -1.5` and `mlp_energy_lt: -0.5` means accepted
+structures satisfy `-1.5 < E_pred < -0.5`.
+
 `viewer/index.html` is a browser-based 3D gallery for accepted structures. It
 uses 3Dmol.js and embeds accepted XYZ text into the HTML, so it can be opened
 directly from the local filesystem without a separate web server.
@@ -268,7 +355,8 @@ parse_failed
 wrong_adsorbate
 wrong_material
 mlp_error
-mlp_not_passed
+mlp_energy_below_min
+mlp_energy_above_max
 duplicate
 ```
 
@@ -317,6 +405,13 @@ Broad single-adsorbate production:
 
 ```text
 Run CH3 production screening on unrestricted materials. Use CUDA, E_pred < 0,
+target 1000 accepted structures, and dry-run first.
+```
+
+Energy-window production:
+
+```text
+Run CH3 screening on unrestricted materials. Use CUDA, -1.5 < E_pred < -0.5,
 target 1000 accepted structures, and dry-run first.
 ```
 

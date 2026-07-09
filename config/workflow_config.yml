@@ -1,10 +1,10 @@
 workflow:
     adsorbate: "CH3"
-    target_success_count: 1000
-    max_rounds: 100
+    target_success_count: 2000
+    max_rounds: 500
     generation_per_round: 1000
     output_root: "outputs/workflows"
-    run_name: "ch3_unrestricted_cuda_e0"
+    run_name: "ch3_production_unrestricted"
     adsorbate_registry: "config/adsorbates.yml"
 
     fine_tune:
@@ -28,6 +28,7 @@ workflow:
 
     filters:
         require_adsorbate_valid: true
+        mlp_energy_gt: null
         mlp_energy_lt: 0.0
 
     duplicate_check:

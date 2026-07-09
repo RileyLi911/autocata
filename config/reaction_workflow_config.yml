@@ -1,31 +1,39 @@
 reaction_workflow:
-    run_name: "co2rr_c1_minimal"
+    run_name: "fischer_tropsch_CO_H_10shared"
     output_root: "outputs/reaction_workflows"
+    screening_mode: "material_first"
 
     adsorbate_registry: "config/adsorbates.yml"
     workflow_template: "config/workflow_config.yml"
     adsorbates:
-        - "CHO"
-        - "CH2O"
-        - "OCH3"
-        - "CH3"
+        - "CO"
+        - "H"
 
-    target_shared_material_count: 1
+    target_shared_material_count: 10
     shared_material:
         target_success_per_adsorbate_per_material: 1
 
+    material_first:
+        target_shared_material_candidates: 100
+        min_candidates_per_adsorbate_per_material: 1
+        max_shared_materials_for_mlp: 100
+        max_structures_per_adsorbate_per_material: 50
+
     per_adsorbate:
+        # target_success_count is used by legacy mlp_first mode.
+        # material_first uses max_rounds * generation_per_round as the pre-MLP generation budget.
+        # Production reaction-network runs should start at >=100,000 generated structures per adsorbate.
         target_success_count: 5
-        max_rounds: 3
-        generation_per_round: 20
+        max_rounds: 10
+        generation_per_round: 10000
 
     fine_tune:
         enabled: false
         require_existing_checkpoint: true
 
     device:
-        generation: "cpu"
-        mlp: "cpu"
+        generation: "cuda"
+        mlp: "cuda"
 
     generation:
         batch_size: 8
@@ -40,6 +48,7 @@ reaction_workflow:
 
     filters:
         require_adsorbate_valid: true
+        mlp_energy_gt: null
         mlp_energy_lt: 0.0
 
     duplicate_check:

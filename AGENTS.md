@@ -72,6 +72,11 @@ python workflow_runner.py --workflow-config config/workflow_config.yml --dry-run
 python reaction_workflow_runner.py --reaction-config config/reaction_workflow_config.yml --dry-run
 ```
 
+Dry-runs use timestamped dry-run output directories when `workflow.run_name` is
+set. For real runs, do not reuse an existing non-empty run directory unless the
+user explicitly asks to overwrite or debug it. Prefer a unique `workflow.run_name`
+for every production run.
+
 ## Session Bootstrap
 
 For a fresh agent context, read these files before editing configs or running
@@ -175,19 +180,60 @@ workflow:
     elements: ["Au"]
   filters:
     require_adsorbate_valid: true
+    mlp_energy_gt: null
     mlp_energy_lt: 0.0
 ```
+
+Energy-window requests should be represented natively:
+
+```yaml
+filters:
+  mlp_energy_gt: -1.5
+  mlp_energy_lt: -0.5
+```
+
+Do not satisfy an energy-window request by running only `mlp_energy_lt` and
+post-filtering `success_summary.csv`; the runner should keep generating until
+the accepted structures already satisfy both bounds.
 
 Important fields in `config/reaction_workflow_config.yml`:
 
 ```yaml
 reaction_workflow:
+  screening_mode: "material_first"
   adsorbate_registry: "config/adsorbates.yml"
   adsorbates: ["CH3", "CHO", "OH"]
   target_shared_material_count: 1
   shared_material:
     target_success_per_adsorbate_per_material: 1
+  material_first:
+    target_shared_material_candidates: null
+    min_candidates_per_adsorbate_per_material: 1
+    max_shared_materials_for_mlp: 50
+    max_structures_per_adsorbate_per_material: 20
 ```
+
+In `material_first` mode, the pre-MLP generation budget is
+`per_adsorbate.max_rounds * per_adsorbate.generation_per_round`.
+`per_adsorbate.target_success_count` is mainly for the legacy `mlp_first` mode.
+
+Production reaction-network searches must use large pre-MLP sampling. Unless
+the user explicitly requests a smoke test, debug run, or a smaller fixed
+budget, configure at least 100,000 generated structures per adsorbate:
+
+```yaml
+per_adsorbate:
+  max_rounds: 10
+  generation_per_round: 10000
+material_first:
+  target_shared_material_candidates: 100
+  max_shared_materials_for_mlp: 100
+  max_structures_per_adsorbate_per_material: 50
+```
+
+Do not conclude that no useful shared materials exist after only hundreds or a
+few thousand generated structures per adsorbate. Report such runs as
+undersampled.
 
 Material query modes:
 
@@ -210,9 +256,13 @@ any_contains material must contain at least one listed element
 8. Summarize success count, structure paths, MLP energy range, and failure reasons.
 
 For reaction-network requests with multiple intermediates, update
-`config/reaction_workflow_config.yml` instead. After the run, read
-`reaction_workflow_report.json`, `shared_material_summary.csv`, and
-`material_adsorbate_matrix.csv`. Prefer materials where
+`config/reaction_workflow_config.yml` instead. Prefer `screening_mode:
+"material_first"` so the runner first identifies shared materials from parsed
+XYZ metadata, then runs MLP only on those shared-material candidates. After the
+run, read `reaction_workflow_report.json`,
+`pre_mlp_shared_material_summary.csv`, `all_mlp_scored_candidates.csv`,
+`shared_material_summary.csv`, and `material_adsorbate_matrix.csv`. Prefer
+materials where
 `all_adsorbates_passed == true`; otherwise report the missing adsorbates per
 material and recommend targeted follow-up runs.
 
@@ -239,9 +289,15 @@ outputs/reaction_workflows/{run_name}/
   adsorbate_runs/
   configs/
   adsorbate_run_summary.csv
+  pre_mlp_candidates.csv
+  pre_mlp_shared_material_summary.csv
+  material_adsorbate_precheck_matrix.csv
+  targeted_mlp_inputs.csv
+  all_mlp_scored_candidates.csv
   all_success_structures.csv
   shared_material_summary.csv
   material_adsorbate_matrix.csv
+  failure_summary.csv
   reaction_workflow_report.json
   reaction_run.log
 ```
@@ -254,6 +310,10 @@ workflow_report.json
 
 Use `success_summary.csv` to list accepted structures.
 Use `failure_summary.csv` to explain why candidates failed.
+Use `all_candidates.csv` and `workflow_report.json` for candidate counts and
+round counts. Do not infer the number of completed rounds by counting
+directories under `rounds/`, because stale directories can remain from old runs
+if an existing run directory was reused.
 Use `viewer/index.html` for browser-based 3D visualization of accepted XYZ files.
 For local desktop runs, `workflow_runner.py --open-viewer` may be used to open
 the viewer automatically after the workflow finishes.
@@ -269,7 +329,8 @@ parse_failed
 wrong_adsorbate
 wrong_material
 mlp_error
-mlp_not_passed
+mlp_energy_below_min
+mlp_energy_above_max
 duplicate
 ```
 
@@ -280,7 +341,8 @@ parse_failed      generated sequence could not be converted to a structure
 wrong_adsorbate   final atoms did not match the requested adsorbate formula
 wrong_material    catalyst material did not match the material query
 mlp_error         MLP calculation failed
-mlp_not_passed    predicted energy did not satisfy the threshold
+mlp_energy_below_min predicted energy was not greater than `mlp_energy_gt`
+mlp_energy_above_max predicted energy was not less than `mlp_energy_lt`
 duplicate         structure matched a previously accepted structure
 ```
 

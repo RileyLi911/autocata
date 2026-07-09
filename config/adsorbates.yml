@@ -9,7 +9,7 @@ required_files:
   - "tokenizer.json"
   - "tokenizer_config.json"
   - "special_tokens_map.json"
-total_adsorbates: 79
+total_adsorbates: 75
 adsorbates:
   - {name: "C", formula: "C", enabled: true}
   - {name: "CC", formula: "C2", enabled: true}

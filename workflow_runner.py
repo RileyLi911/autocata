@@ -18,14 +18,6 @@ from omegaconf import OmegaConf
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
-# Use conda env python when available (conda run sets sys.executable to /usr/bin/python
-# which doesn't have the conda env packages available).
-_conda_prefix = os.environ.get("CONDA_PREFIX", "")
-if _conda_prefix:
-    _conda_python = os.path.join(_conda_prefix, "bin", "python")
-    if os.path.isfile(_conda_python):
-        sys.executable = _conda_python
-
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the local structure-generation workflow.")
@@ -35,6 +27,16 @@ def parse_args():
     parser.add_argument("--run-dir", help="Override workflow output run directory.")
     parser.add_argument("--dry-run", action="store_true", help="Print and log commands without executing them.")
     parser.add_argument("--open-viewer", action="store_true", help="Open viewer/index.html after the workflow finishes.")
+    parser.add_argument(
+        "--overwrite-run-dir",
+        action="store_true",
+        help="Delete an existing run directory before writing new outputs.",
+    )
+    parser.add_argument(
+        "--allow-existing-run-dir",
+        action="store_true",
+        help="Allow writing into an existing non-empty run directory. Use only for debugging.",
+    )
     return parser.parse_args()
 
 
@@ -167,11 +169,13 @@ def make_run_dir(workflow, args):
         return resolve_project_path(args.run_dir)
 
     run_name = workflow.workflow.run_name
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     if run_name is None:
         material = OmegaConf.select(workflow, "workflow.material_query.material", default="material")
         energy = OmegaConf.select(workflow, "workflow.filters.mlp_energy_lt", default="none")
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         run_name = f"{workflow.workflow.adsorbate}_{material}_E_lt_{energy}_{timestamp}"
+    elif args.dry_run:
+        run_name = f"{run_name}_dryrun_{timestamp}"
 
     output_root = resolve_project_path(workflow.workflow.output_root)
     return output_root / slugify(run_name)
@@ -190,16 +194,42 @@ def run_command(command, log_file, dry_run=False):
             log.write("[dry-run] skipped\n")
             return
 
-        with open(log_file, "a", encoding="utf-8") as log:
-            result = subprocess.run(
-                command,
-                cwd=PROJECT_ROOT,
-                text=True,
-                stdout=log,
-                stderr=subprocess.STDOUT,
-            )
+        result = subprocess.run(
+            command,
+            cwd=PROJECT_ROOT,
+            text=True,
+            capture_output=True,
+        )
+        if result.stdout:
+            log.write(result.stdout)
+        if result.stderr:
+            log.write(result.stderr)
         if result.returncode != 0:
             raise RuntimeError(f"Command failed ({result.returncode}): {command_to_text(command)}")
+
+
+def is_relative_to(path, parent):
+    try:
+        Path(path).resolve().relative_to(Path(parent).resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def prepare_run_dir(run_dir, args):
+    run_dir = Path(run_dir).resolve()
+    if run_dir.exists() and any(run_dir.iterdir()):
+        if args.overwrite_run_dir:
+            output_root = resolve_project_path("outputs")
+            if run_dir == PROJECT_ROOT or not is_relative_to(run_dir, output_root):
+                raise ValueError(f"Refusing to overwrite run directory outside outputs/: {path_for_message(run_dir)}")
+            shutil.rmtree(run_dir)
+        elif not args.allow_existing_run_dir:
+            raise FileExistsError(
+                f"Run directory already exists and is not empty: {path_for_message(run_dir)}. "
+                "Use a unique workflow.run_name, pass --overwrite-run-dir, or pass --allow-existing-run-dir."
+            )
+    run_dir.mkdir(parents=True, exist_ok=True)
 
 
 def read_csv(path):
@@ -255,6 +285,7 @@ def file_fingerprint(path):
 
 def evaluate_candidate(row, workflow, seen_fingerprints):
     require_adsorbate = OmegaConf.select(workflow, "workflow.filters.require_adsorbate_valid", default=True)
+    energy_gt = OmegaConf.select(workflow, "workflow.filters.mlp_energy_gt", default=None)
     energy_lt = OmegaConf.select(workflow, "workflow.filters.mlp_energy_lt", default=None)
     duplicate_check = OmegaConf.select(workflow, "workflow.duplicate_check.enabled", default=False)
 
@@ -268,8 +299,10 @@ def evaluate_candidate(row, workflow, seen_fingerprints):
         return False, "mlp_error"
 
     energy = float(row["E_pred"])
+    if energy_gt is not None and energy <= float(energy_gt):
+        return False, "mlp_energy_below_min"
     if energy_lt is not None and energy >= float(energy_lt):
-        return False, "mlp_not_passed"
+        return False, "mlp_energy_above_max"
 
     if duplicate_check:
         xyz_path = resolve_project_path(row["xyz_file"])
@@ -425,13 +458,14 @@ def main():
     adsorbate_context = load_adsorbate_context(project_params, workflow, adsorbate)
 
     run_dir = make_run_dir(workflow, args)
-    run_dir.mkdir(parents=True, exist_ok=True)
+    prepare_run_dir(run_dir, args)
     log_file = run_dir / "run.log"
     success_dir = run_dir / "success_structures"
     failed_dir = run_dir / "failed_structures"
 
     report = {
         "status": "running",
+        "dry_run": bool(args.dry_run),
         "adsorbate": adsorbate,
         "run_dir": path_for_message(run_dir),
         "workflow_config": path_for_message(workflow_config),
@@ -440,6 +474,12 @@ def main():
         "adsorbate_formula": adsorbate_context.get("formula", adsorbate),
         "checkpoint_source": adsorbate_context.get("source"),
         "checkpoint_path": path_for_message(adsorbate_context["checkpoint_path"]) if adsorbate_context.get("checkpoint_path") else None,
+        "filters": {
+            "require_adsorbate_valid": bool(OmegaConf.select(workflow, "workflow.filters.require_adsorbate_valid", default=True)),
+            "mlp_energy_gt": OmegaConf.select(workflow, "workflow.filters.mlp_energy_gt", default=None),
+            "mlp_energy_lt": OmegaConf.select(workflow, "workflow.filters.mlp_energy_lt", default=None),
+        },
+        "material_query": OmegaConf.to_container(workflow.workflow.material_query, resolve=True),
         "rounds": [],
         "counts": {},
         "outputs": {},

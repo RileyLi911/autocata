@@ -100,6 +100,13 @@ Run dry-runs before real workflows unless the user has already confirmed the
 exact config.
 
 For new users, always dry-run first even when their prompt is short.
+Use a unique `workflow.run_name` for production runs. Do not reuse an existing
+non-empty run directory unless the user explicitly asks to overwrite or debug
+it.
+Use native energy-window filters when requested: `mlp_energy_gt` is the lower
+bound and `mlp_energy_lt` is the upper bound. For `-1.5 < E_pred < -0.5`, set
+`mlp_energy_gt: -1.5` and `mlp_energy_lt: -0.5`; do not rely on post-filtering
+after a one-sided workflow.
 
 ## Adsorbate Selection
 
@@ -142,15 +149,42 @@ Read and summarize:
 outputs/workflows/{run_name}/workflow_report.json
 outputs/workflows/{run_name}/success_summary.csv
 outputs/workflows/{run_name}/failure_summary.csv
+outputs/workflows/{run_name}/all_candidates.csv
 outputs/workflows/{run_name}/run.log
 ```
 
 Report accepted XYZ paths and `viewer/index.html` when structures pass.
+Use `workflow_report.json` and CSV files for round/candidate counts; do not
+count stale `rounds/` subdirectories.
 
 ## Reaction-Network Workflow
 
 Use this for multiple intermediates where the final goal is a common catalyst
 material across all selected adsorbates.
+
+Prefer `reaction_workflow.screening_mode: "material_first"` for production
+reaction-network searches. In this mode, AutoCata first generates and parses
+large candidate sets, finds materials shared across all selected adsorbates,
+and only then runs MLP on those shared-material candidates. This is more
+efficient than scoring every generated structure before checking material
+overlap.
+
+Production reaction-network searches require large pre-MLP sampling. Unless
+the user explicitly says "smoke test", "debug", or gives a smaller fixed
+budget, do not use small settings such as `max_rounds <= 5` or
+`generation_per_round <= 1000`. Start with at least 100,000 generated
+structures per adsorbate:
+
+```yaml
+per_adsorbate:
+  max_rounds: 10
+  generation_per_round: 10000
+```
+
+If no pre-MLP shared materials or post-MLP shared materials are found, report
+that the generation budget was exhausted; do not imply that the chemistry is
+invalid after only hundreds or a few thousand generated structures per
+adsorbate.
 
 Edit `config/reaction_workflow_config.yml`, then dry-run:
 
@@ -175,6 +209,9 @@ Read and summarize:
 ```text
 outputs/reaction_workflows/{run_name}/reaction_workflow_report.json
 outputs/reaction_workflows/{run_name}/adsorbate_run_summary.csv
+outputs/reaction_workflows/{run_name}/pre_mlp_shared_material_summary.csv
+outputs/reaction_workflows/{run_name}/targeted_mlp_inputs.csv
+outputs/reaction_workflows/{run_name}/all_mlp_scored_candidates.csv
 outputs/reaction_workflows/{run_name}/shared_material_summary.csv
 outputs/reaction_workflows/{run_name}/material_adsorbate_matrix.csv
 outputs/reaction_workflows/{run_name}/reaction_run.log
@@ -183,6 +220,12 @@ outputs/reaction_workflows/{run_name}/reaction_run.log
 Prefer materials where `all_adsorbates_passed == true`. If none exist, explain
 which adsorbates are missing for the best partial materials and suggest
 increasing `target_success_count`, `max_rounds`, or `generation_per_round`.
+In `material_first` mode, distinguish between pre-MLP shared candidates and
+post-MLP shared materials: do not call a material successful unless it appears
+in `shared_material_summary.csv` with `all_adsorbates_passed == true`.
+For `material_first`, generation scale is controlled by
+`per_adsorbate.max_rounds * per_adsorbate.generation_per_round`;
+`per_adsorbate.target_success_count` is mainly for the legacy `mlp_first` mode.
 
 ## Config Defaults For Small Tests
 
@@ -202,14 +245,22 @@ max_rounds: 1
 generation_per_round: 5
 ```
 
-For reaction-network exploration, a modest next step is:
+For reaction-network production, start with a large material-first pre-MLP
+generation budget:
 
 ```yaml
 per_adsorbate:
   target_success_count: 5
-  max_rounds: 3
-  generation_per_round: 20
+  max_rounds: 10
+  generation_per_round: 10000
+material_first:
+  target_shared_material_candidates: 100
+  max_shared_materials_for_mlp: 100
+  max_structures_per_adsorbate_per_material: 50
 ```
+
+Use smaller settings only when the user explicitly asks for a smoke test or
+debug run.
 
 ## Result Summary Pattern
 
@@ -217,6 +268,7 @@ For single-adsorbate runs, summarize:
 
 - status and success count
 - accepted structures and MLP energies
+- applied energy bounds
 - failure reasons
 - viewer path
 

@@ -52,6 +52,13 @@ Run CH3 screening on Cu-based catalysts. Use CUDA, E_pred < 0, target 500
 accepted structures, and dry-run first.
 ```
 
+Energy windows are supported directly:
+
+```text
+Run CH3 screening on unrestricted materials. Use CUDA, -1.5 < E_pred < -0.5,
+target 1000 accepted structures, and dry-run first.
+```
+
 ## Repository Layout
 
 ```text
@@ -187,6 +194,29 @@ outputs/workflows/{run_name}/
 Use this when several adsorbate intermediates should be screened against the
 same catalyst material set.
 
+The recommended reaction-network mode is `material_first`: AutoCata first
+generates and parses structures for each adsorbate, finds catalyst materials
+that appear across all selected adsorbates, and only then runs MLP on those
+shared-material candidates.
+
+For production reaction-network searches, use a large pre-MLP generation
+budget. Unless the request is explicitly a smoke test or debug run, start with
+at least 100,000 generated structures per adsorbate:
+
+```yaml
+per_adsorbate:
+  max_rounds: 10
+  generation_per_round: 10000
+material_first:
+  target_shared_material_candidates: 100
+  max_shared_materials_for_mlp: 100
+  max_structures_per_adsorbate_per_material: 50
+```
+
+Runs with only hundreds of generated structures per adsorbate are undersampled
+and should not be interpreted as evidence that no shared catalyst materials
+exist.
+
 Dry-run:
 
 ```bash
@@ -212,16 +242,24 @@ outputs/reaction_workflows/{run_name}/
   adsorbate_runs/
   configs/
   adsorbate_run_summary.csv
+  pre_mlp_candidates.csv
+  pre_mlp_shared_material_summary.csv
+  material_adsorbate_precheck_matrix.csv
+  targeted_mlp_inputs.csv
+  all_mlp_scored_candidates.csv
   all_success_structures.csv
   shared_material_summary.csv
   material_adsorbate_matrix.csv
+  failure_summary.csv
   reaction_workflow_report.json
   reaction_run.log
 ```
 
-`material_adsorbate_matrix.csv` is the key table for common-material screening.
-It records, for each material, how many accepted structures exist for each
-target adsorbate and whether all target adsorbates passed.
+`pre_mlp_shared_material_summary.csv` records shared-material candidates before
+MLP. `material_adsorbate_matrix.csv` is the key post-MLP table for
+common-material screening: it records, for each material, how many accepted
+structures exist for each target adsorbate and whether all target adsorbates
+passed.
 
 ## Agent Usage
 

@@ -208,6 +208,43 @@ def run_command(command, log_file, dry_run=False):
             raise RuntimeError(f"Command failed ({result.returncode}): {command_to_text(command)}")
 
 
+def build_structure_previews(workflow, success_summary, run_dir, adsorbate, log_file, dry_run=False):
+    preview_dir = run_dir / "structure_previews"
+    enabled = bool(OmegaConf.select(workflow, "workflow.preview.enabled", default=True))
+    outputs = {
+        "structure_previews": path_for_message(preview_dir),
+        "preview_summary_csv": path_for_message(preview_dir / "preview_summary.csv"),
+        "preview_manifest_json": path_for_message(preview_dir / "preview_manifest.json"),
+    }
+    if not enabled:
+        return outputs
+
+    command = [
+        sys.executable,
+        "script/render_xyz_preview.py",
+        "--success-summary",
+        success_summary,
+        "--output-dir",
+        preview_dir,
+        "--adsorbate",
+        adsorbate,
+        "--max-structures",
+        int(OmegaConf.select(workflow, "workflow.preview.max_structures", default=5)),
+        "--frames",
+        int(OmegaConf.select(workflow, "workflow.preview.frames", default=12)),
+        "--image-width",
+        int(OmegaConf.select(workflow, "workflow.preview.image_width", default=720)),
+        "--image-height",
+        int(OmegaConf.select(workflow, "workflow.preview.image_height", default=540)),
+        "--gif-duration-ms",
+        int(OmegaConf.select(workflow, "workflow.preview.gif_duration_ms", default=160)),
+    ]
+    if not bool(OmegaConf.select(workflow, "workflow.preview.gif", default=True)):
+        command.append("--no-gif")
+    run_command(command, log_file, dry_run=dry_run)
+    return outputs
+
+
 def is_relative_to(path, parent):
     try:
         Path(path).resolve().relative_to(Path(parent).resolve())
@@ -585,6 +622,14 @@ def main():
             log_file,
             dry_run=args.dry_run,
         )
+        preview_outputs = build_structure_previews(
+            workflow,
+            run_dir / "success_summary.csv",
+            run_dir,
+            adsorbate,
+            log_file,
+            dry_run=args.dry_run,
+        )
 
         report["status"] = "success" if len(success_rows) >= int(workflow.workflow.target_success_count) else "incomplete"
         report["counts"] = {
@@ -601,6 +646,7 @@ def main():
             "failure_summary_csv": path_for_message(run_dir / "failure_summary.csv"),
             "viewer_index": path_for_message(viewer_index),
             "run_log": path_for_message(log_file),
+            **preview_outputs,
         }
     except Exception as exc:
         report["status"] = "failed"

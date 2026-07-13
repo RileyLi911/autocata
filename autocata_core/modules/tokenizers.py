@@ -10,9 +10,9 @@ from typing import Any, Dict, Optional, List, Tuple
 from transformers import PreTrainedTokenizer
 from transformers.tokenization_utils import AddedToken
 
-class T5TokenizerForCat(PreTrainedTokenizer):
+class T5TokenizerForStructure(PreTrainedTokenizer):
     """
-    T5Tokenizer for CatGPT
+    Tokenizer for AutoCata structure sequences.
     """
     def __init__(
         self,
@@ -26,7 +26,7 @@ class T5TokenizerForCat(PreTrainedTokenizer):
         
         self._extra_ids = extra_ids
         self.max_len = max_len
-        self.__name__ = 'T5TokenizerForCat'
+        self.__name__ = 'T5TokenizerForStructure'
 
         eos_token = kwargs.pop("eos_token", "<eos>")
         bos_token = kwargs.pop("bos_token", "<bos>")

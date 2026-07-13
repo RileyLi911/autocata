@@ -1,7 +1,7 @@
 import pandas as pd
 import numbers
 from torch.utils.data import Dataset
-from catgpt.dataset.dataset_utils import str_preprocess, prop_preprocess
+from autocata_core.dataset.dataset_utils import str_preprocess, prop_preprocess
 
 class CifDataset(Dataset):
     '''

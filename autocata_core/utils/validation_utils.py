@@ -4,7 +4,7 @@ import torch
 import smact
 import torch.nn.functional as F
 from smact.screening import pauling_test
-from catgpt.utils.generation_utils import atoms_to_str
+from autocata_core.utils.generation_utils import atoms_to_str
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from scipy.spatial.distance import pdist

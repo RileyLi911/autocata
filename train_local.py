@@ -8,9 +8,9 @@ from transformers import Trainer, TrainingArguments
 from peft import LoraConfig, get_peft_model
 
 
-from catgpt.modules.trainer import CustomHFTrainer
-from catgpt.modules.models import get_model
-from catgpt.modules.tokenizers import T5TokenizerForCat
+from autocata_core.modules.trainer import CustomHFTrainer
+from autocata_core.modules.models import get_model
+from autocata_core.modules.tokenizers import T5TokenizerForStructure
 
 from omegaconf import OmegaConf
 
@@ -18,7 +18,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Train CatGPT from a YAML config.")
+    parser = argparse.ArgumentParser(description="Train the AutoCata structure model from a YAML config.")
     parser.add_argument(
         "--config",
         default="config/config.yml",
@@ -134,7 +134,7 @@ def build_tokenizer(model_params, data_params):
     )
     if data_params.string_type == "t5":
         tokenizer_dir = resolve_project_path(f"data/tokenizer/t5-{props}tokenizer")
-        return T5TokenizerForCat.from_pretrained(tokenizer_dir)
+        return T5TokenizerForStructure.from_pretrained(tokenizer_dir)
 
     return PreTrainedTokenizerFast.from_pretrained(
         tokenizer_dir,
@@ -168,7 +168,7 @@ def build_training_args(model_params, data_params, output_dir):
 
 
 def main(args):
-    os.environ["WANDB_PROJECT"] = "CatGPT"
+    os.environ["WANDB_PROJECT"] = "AutoCata"
 
     config_path = resolve_input_path(args.config)
     params = prepare_params(config_path, args)

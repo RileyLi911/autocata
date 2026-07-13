@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autocata-core"
+version = "0.1.0"
+description = "Internal AutoCata structure-generation and training core"
+requires-python = ">=3.9,<3.10"
+
+[tool.setuptools.packages.find]
+include = ["autocata_core*"]

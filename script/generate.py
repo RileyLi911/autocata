@@ -20,7 +20,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def parse_args():
-    p = argparse.ArgumentParser(description="Generate structures from a finetuned CatGPT checkpoint.")
+    p = argparse.ArgumentParser(description="Generate structures from an AutoCata checkpoint.")
     p.add_argument("--config", default="config/config.yml", help="Path to the training config YAML file.")
     p.add_argument("--adsorbate", help="Adsorbate name. Overrides experiment.adsorbate in the config.")
 

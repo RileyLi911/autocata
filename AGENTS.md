@@ -317,8 +317,12 @@ if an existing run directory was reused.
 Use `viewer/index.html` for browser-based 3D visualization of accepted XYZ files.
 For local desktop runs, `workflow_runner.py --open-viewer` may be used to open
 the viewer automatically after the workflow finishes.
+Use `structure_previews/preview_manifest.json` for chat-ready PNG/GIF files.
 When reporting workflow results, do not stop at a text table. Always report the
-local 3D viewer path when accepted structures are available.
+local 3D viewer path when accepted structures are available. On Feishu or any
+other attachment-capable chat channel, attach the first successful GIF previews;
+fall back to the corresponding PNG files if animated GIF is unsupported. Do not
+send every preview when the result set is large.
 
 ## Failure Reasons
 

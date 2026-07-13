@@ -1,0 +1,8 @@
+conda config --set channel_priority flexible
+
+conda env create -f autocata_legacy.yml
+
+# Install PyG separately with pip
+pip install torch-geometric
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv \
+  -f https://data.pyg.org/whl/torch-2.4.0+cu121.html

@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: autocata-core
+Version: 0.1.0
+Summary: Internal AutoCata structure-generation and training core
+Requires-Python: <3.10,>=3.9

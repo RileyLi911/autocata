@@ -8,8 +8,8 @@ from transformers.utils import logging
 import torch
 from torch import nn
 
-from catgpt.modules.encodings import CyclicEncoding
-from catgpt.modules.factories import MODEL_TO_EMBEDDING_FN
+from autocata_core.modules.encodings import CyclicEncoding
+from autocata_core.modules.factories import MODEL_TO_EMBEDDING_FN
 
 logger = logging.get_logger(__name__)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -151,9 +151,13 @@ outputs/workflows/{run_name}/success_summary.csv
 outputs/workflows/{run_name}/failure_summary.csv
 outputs/workflows/{run_name}/all_candidates.csv
 outputs/workflows/{run_name}/run.log
+outputs/workflows/{run_name}/structure_previews/preview_manifest.json
 ```
 
-Report accepted XYZ paths and `viewer/index.html` when structures pass.
+Report accepted XYZ paths and `viewer/index.html` when structures pass. On an
+attachment-capable chat channel, read `preview_manifest.json` and attach the
+first successful GIF previews. Use the corresponding PNG files when GIF is not
+supported. Keep the attachment count concise.
 Use `workflow_report.json` and CSV files for round/candidate counts; do not
 count stale `rounds/` subdirectories.
 
@@ -215,6 +219,7 @@ outputs/reaction_workflows/{run_name}/all_mlp_scored_candidates.csv
 outputs/reaction_workflows/{run_name}/shared_material_summary.csv
 outputs/reaction_workflows/{run_name}/material_adsorbate_matrix.csv
 outputs/reaction_workflows/{run_name}/reaction_run.log
+outputs/reaction_workflows/{run_name}/structure_previews/preview_manifest.json
 ```
 
 Prefer materials where `all_adsorbates_passed == true`. If none exist, explain

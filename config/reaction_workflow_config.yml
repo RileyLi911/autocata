@@ -1,13 +1,15 @@
 reaction_workflow:
-    run_name: "fischer_tropsch_CO_H_10shared"
+    run_name: "reaction_material_first_production"
     output_root: "outputs/reaction_workflows"
     screening_mode: "material_first"
 
     adsorbate_registry: "config/adsorbates.yml"
     workflow_template: "config/workflow_config.yml"
     adsorbates:
-        - "CO"
-        - "H"
+        - "CHO"
+        - "CH2O"
+        - "OCH3"
+        - "CH3"
 
     target_shared_material_count: 10
     shared_material:
@@ -32,8 +34,8 @@ reaction_workflow:
         require_existing_checkpoint: true
 
     device:
-        generation: "cuda"
-        mlp: "cuda"
+        generation: "cpu"
+        mlp: "cpu"
 
     generation:
         batch_size: 8
@@ -53,5 +55,14 @@ reaction_workflow:
 
     duplicate_check:
         enabled: false
+
+    preview:
+        enabled: true
+        max_structures: 10
+        frames: 12
+        image_width: 720
+        image_height: 540
+        gif_duration_ms: 160
+        gif: true
 
     keep_failed_structures: false

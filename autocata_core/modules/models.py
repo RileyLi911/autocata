@@ -10,11 +10,11 @@ from transformers import (
 )
 
 from transformers import DataCollatorWithPadding
-from catgpt.models.conditional_gpt import GPT2LMHeadModelForConditionalGeneration
-from catgpt.modules.t5_modules import DataCollatorForT5MLM, compute_input_and_target_lengths
-from catgpt.modules.bart_modules import DataCollatorForCatMLM
-from catgpt.dataset.dataset import CifDataset
-from catgpt.dataset.dataset_utils import hf_tokenization
+from autocata_core.models.conditional_gpt import GPT2LMHeadModelForConditionalGeneration
+from autocata_core.modules.t5_modules import DataCollatorForT5MLM, compute_input_and_target_lengths
+from autocata_core.modules.bart_modules import DataCollatorForStructureMLM
+from autocata_core.dataset.dataset import CifDataset
+from autocata_core.dataset.dataset_utils import hf_tokenization
 from datasets import load_dataset
 
 import torch
@@ -106,7 +106,7 @@ def get_model(model_params, data_params, tokenizer):
             decoder_start_token_id=tokenizer.bos_token_id,
         )
         
-        data_collator = DataCollatorForCatMLM(
+        data_collator = DataCollatorForStructureMLM(
             tokenizer=tokenizer,
             noise_density=model_params.noise_density,
             mean_noise_span_length=model_params.mean_span,

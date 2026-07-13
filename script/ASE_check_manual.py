@@ -15,14 +15,14 @@ from tqdm import tqdm
 from transformers import PreTrainedTokenizerFast
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from catgpt.utils.generation_utils import str_to_atoms
+from autocata_core.utils.generation_utils import str_to_atoms
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def parse_args():
-    p = argparse.ArgumentParser(description="Decode generated CatGPT pkl files and write valid structures.")
+    p = argparse.ArgumentParser(description="Decode generated AutoCata pkl files and write valid structures.")
     p.add_argument("--config", default="config/config.yml", help="Path to the training config YAML file.")
     p.add_argument("--adsorbate", help="Adsorbate name. Overrides experiment.adsorbate in the config.")
     p.add_argument("--pkl-path", help="Generated pkl path. Defaults to generated_{adsorbate}.pkl.")

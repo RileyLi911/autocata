@@ -290,6 +290,7 @@ Important outputs:
 ```text
 success_structures/
 viewer/index.html
+structure_previews/
 all_candidates.csv
 success_summary.csv
 failure_summary.csv
@@ -345,6 +346,43 @@ workflow:
   viewer:
     auto_open: true
 ```
+
+`structure_previews/` contains headless renderings that do not require a
+browser or display server:
+
+```text
+preview_summary.csv
+preview_manifest.json
+*.png
+*.gif
+```
+
+The PNG is a representative view and the GIF rotates the structure around the
+surface-normal axis. Adsorbate atoms are outlined in green. Configure the
+number and size of previews with:
+
+```yaml
+workflow:
+  preview:
+    enabled: true
+    max_structures: 5
+    frames: 12
+    image_width: 720
+    image_height: 540
+    gif_duration_ms: 160
+    gif: true
+```
+
+For reaction-network runs, the same keys live under
+`reaction_workflow.preview`. Only materials marked
+`all_adsorbates_passed: true` are selected for reaction-network previews.
+Selection prefers different material and adsorbate combinations, then lower
+`E_pred` values.
+
+An agent replying through Feishu should read `preview_manifest.json` and attach
+the first successful GIF files. If animated GIF attachment is unavailable, it
+should attach the corresponding PNG files instead. AutoCata does not store
+Feishu credentials or call the Feishu API directly.
 
 ## Failure Reasons
 

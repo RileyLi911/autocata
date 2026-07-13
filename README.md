@@ -1,7 +1,7 @@
 # AutoCata
 
 AutoCata is a local, agent-ready workflow for adsorbate-conditioned catalyst
-structure generation and screening. It organizes the existing CatGPT generation
+structure generation and screening. It organizes the internal AutoCata core
 scripts, XYZ parsing, material/adsorbate indexing, OC20 MLP scoring, and
 multi-adsorbate reaction-network aggregation behind CLI entry points that an
 agent can call safely.
@@ -14,6 +14,7 @@ The project currently supports:
 - multi-adsorbate reaction-network screening with `reaction_workflow_runner.py`
 - common-material aggregation through `material_adsorbate_matrix.csv`
 - desktop 3D viewing of accepted structures through `viewer/index.html`
+- headless PNG and rotating GIF previews that can be attached to chat results
 
 ## Default Agent Behavior
 
@@ -74,6 +75,7 @@ script/
   ASE_check_manual.py           decode generated pkl into xyz structures
   index_xyz_metadata.py         check adsorbate formula and catalyst material
   build_structure_gallery.py    build desktop 3D viewer
+  render_xyz_preview.py         render server-side PNG/GIF previews
 MLP_check/OC20_MLP/
   mlp_scores.py                 score xyz structures with OC20 MLP
 workflow_runner.py              single-adsorbate workflow runner
@@ -187,6 +189,10 @@ outputs/workflows/{run_name}/
   workflow_report.json
   run.log
   viewer/index.html
+  structure_previews/preview_summary.csv
+  structure_previews/preview_manifest.json
+  structure_previews/*.png
+  structure_previews/*.gif
 ```
 
 ## Reaction-Network Workflow
@@ -297,8 +303,10 @@ acceptable as long as the agent preserves the AutoCata operating rules.
 - The current generation model is adsorbate-conditioned, not
   material-conditioned. Exact shared-material discovery is therefore based on
   generation plus filtering/aggregation.
-- Desktop 3D visualization is generated as `viewer/index.html`; mobile
-  visualization is intentionally not part of the current workflow.
+- Desktop 3D visualization is generated as `viewer/index.html`. Server-side
+  PNG/GIF previews are generated under `structure_previews/` for chat clients
+  such as Feishu. AutoCata creates the media files; the calling agent is
+  responsible for attaching them to its reply.
 
 ## More Documentation
 

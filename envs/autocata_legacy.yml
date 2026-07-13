@@ -1,0 +1,40 @@
+name: autocata_legacy
+
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+
+dependencies:
+  # ---- 基础 ----
+  - python=3.9
+  - pip
+  - numpy=1.24.*
+  - pandas=2.2.*
+  - scipy=1.11.4
+  - tqdm
+
+  # ---- 材料学栈 ----
+  - pymatgen=2023.11.12
+  - matminer=0.9.2
+
+  # ---- PyTorch（conda）----
+  - pytorch=2.4.0
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1  # 用自带 CUDA 12.1 runtime（与 12.8 驱动兼容）
+
+  # ---- 训练配套 ----
+  - pytorch-lightning=2.1.2
+  - torchmetrics=1.2.1
+
+  # 其余走 pip，避免和 conda 的 CUDA 约束打架
+  - pip:
+      - ase==3.22.1
+      - transformers==4.51.3
+      - datasets==3.5.0
+      - peft==0.8.2
+      - omegaconf==2.3.0
+      - smact==2.2.1
+      - wandb==0.16.4
+      - fairchem-core==1.4.0

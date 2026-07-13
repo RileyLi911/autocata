@@ -79,6 +79,44 @@ def run_command(command, log_file, dry_run=False):
             raise RuntimeError(f"Command failed ({result.returncode}): {command_to_text(command)}")
 
 
+def build_structure_previews(reaction, success_summary, run_dir, log_file, dry_run=False,
+                             shared_material_summary=None):
+    preview_dir = run_dir / "structure_previews"
+    enabled = bool(OmegaConf.select(reaction, "reaction_workflow.preview.enabled", default=True))
+    outputs = {
+        "structure_previews": path_for_message(preview_dir),
+        "preview_summary_csv": path_for_message(preview_dir / "preview_summary.csv"),
+        "preview_manifest_json": path_for_message(preview_dir / "preview_manifest.json"),
+    }
+    if not enabled:
+        return outputs
+
+    command = [
+        sys.executable,
+        "script/render_xyz_preview.py",
+        "--success-summary",
+        success_summary,
+        "--output-dir",
+        preview_dir,
+        "--max-structures",
+        int(OmegaConf.select(reaction, "reaction_workflow.preview.max_structures", default=10)),
+        "--frames",
+        int(OmegaConf.select(reaction, "reaction_workflow.preview.frames", default=12)),
+        "--image-width",
+        int(OmegaConf.select(reaction, "reaction_workflow.preview.image_width", default=720)),
+        "--image-height",
+        int(OmegaConf.select(reaction, "reaction_workflow.preview.image_height", default=540)),
+        "--gif-duration-ms",
+        int(OmegaConf.select(reaction, "reaction_workflow.preview.gif_duration_ms", default=160)),
+    ]
+    if shared_material_summary is not None:
+        command.extend(["--shared-material-summary", shared_material_summary])
+    if not bool(OmegaConf.select(reaction, "reaction_workflow.preview.gif", default=True)):
+        command.append("--no-gif")
+    run_command(command, log_file, dry_run=dry_run)
+    return outputs
+
+
 def read_csv(path):
     if not Path(path).is_file():
         return []
@@ -974,6 +1012,16 @@ def run_mlp_first(args, reaction, reaction_config, project_config, workflow_temp
             },
         }
         report_path = run_dir / "reaction_workflow_report.json"
+        report["outputs"].update(
+            build_structure_previews(
+                reaction,
+                run_dir / "all_success_structures.csv",
+                run_dir,
+                log_file,
+                dry_run=args.dry_run,
+                shared_material_summary=run_dir / "shared_material_summary.csv",
+            )
+        )
         write_json(report_path, report)
     except Exception as exc:
         report = {
@@ -1231,6 +1279,17 @@ def run_material_first(args, reaction, reaction_config, project_config, workflow
             report,
             report_path,
         )
+        report["outputs"].update(
+            build_structure_previews(
+                reaction,
+                run_dir / "all_success_structures.csv",
+                run_dir,
+                log_file,
+                dry_run=args.dry_run,
+                shared_material_summary=run_dir / "shared_material_summary.csv",
+            )
+        )
+        write_json(report_path, report)
     except Exception as exc:
         report = {
             "status": "failed",

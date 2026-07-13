@@ -30,7 +30,7 @@ and install PyG manually:
 Basic checks:
 
   python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
-  python -c "import transformers, peft, omegaconf, ase, pymatgen; print('catgpt deps ok')"
+  python -c "import transformers, peft, omegaconf, ase, pymatgen, PIL; print('autocata core and preview deps ok')"
   python -c "from fairchem.core.common.relaxation.ase_utils import OCPCalculator; print('fairchem ok')"
 
 If `fairchem` fails on Python 3.9 with an annotation error mentioning
@@ -44,6 +44,7 @@ Project smoke checks from `autocata`:
   python script/generate.py --help
   python script/ASE_check_manual.py --help
   python script/index_xyz_metadata.py --help
+  python script/render_xyz_preview.py --help
   python MLP_check/OC20_MLP/mlp_scores.py --help
 
 Use this environment name in OpenClaw instructions:

@@ -73,7 +73,7 @@ def pad_without_fast_tokenizer_warning(tokenizer, *pad_args, **pad_kwargs):
     return padded
 
 @dataclass
-class DataCollatorForCatMLM:
+class DataCollatorForStructureMLM:
     """
     Data collator used for T5 span-masked language modeling.
     It is made sure that after masking the inputs are of length `data_args.max_seq_length` and targets are also of fixed length.

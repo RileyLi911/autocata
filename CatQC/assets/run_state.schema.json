@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run_state.schema.json",
+  "title": "Mutable benchmark run state v4",
+  "type": "object",
+  "required": [
+    "schema_version", "run_id", "request_identity_sha256", "status", "current_step",
+    "completed_steps", "generation", "frame_count", "adsorbate_validation",
+    "submission_allowed", "reconciliation_required", "current_action", "next_action",
+    "active_jobs", "progress", "pending_questions", "models", "last_event_sequence", "last_updated"
+  ],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "request_identity_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "status": { "enum": ["initialized", "active", "blocked", "complete", "failed"] },
+    "current_step": { "enum": ["step0", "step1", "step2", "step3", "step4", "step5", "complete", "blocked"] },
+    "completed_steps": { "type": "array", "uniqueItems": true, "items": { "enum": ["step0", "step1", "step2", "step3", "step4", "step5"] } },
+    "generation": { "type": "integer", "minimum": 0 },
+    "frame_count": { "type": ["integer", "null"], "minimum": 1 },
+    "adsorbate_validation": { "enum": ["pending", "validated", "mismatch"] },
+    "submission_allowed": { "type": "boolean" },
+    "reconciliation_required": { "type": "boolean" },
+    "current_action": { "type": ["string", "null"] },
+    "next_action": { "type": ["string", "null"] },
+    "active_jobs": { "type": "array", "items": { "type": "object" } },
+    "dft_reference": {
+      "type": "object",
+      "required": ["mode", "status", "expected_calculations", "completed_calculations", "failed_calculations", "active_calculations", "valid_frames", "coverage_fraction", "manifest_path", "profile_sha256", "partial_approval_path", "next_action", "last_updated"],
+      "properties": {
+        "mode": { "enum": ["provided", "generate_vasp"] },
+        "status": { "enum": ["provided_pending", "provided_ready", "not_prepared", "prepared", "running", "blocked", "complete", "partial_approved"] },
+        "expected_calculations": { "type": ["integer", "null"], "minimum": 1 },
+        "completed_calculations": { "type": "integer", "minimum": 0 },
+        "failed_calculations": { "type": "integer", "minimum": 0 },
+        "active_calculations": { "type": "integer", "minimum": 0 },
+        "valid_frames": { "type": "integer", "minimum": 0 },
+        "coverage_fraction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "manifest_path": { "type": ["string", "null"] },
+        "profile_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "partial_approval_path": { "type": ["string", "null"] },
+        "next_action": { "type": ["string", "null"] },
+        "last_updated": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "progress": {
+      "type": "object",
+      "required": ["expected_frames", "completed_frames", "failed_frames", "active_frames", "coverage_fraction"],
+      "properties": {
+        "expected_frames": { "type": ["integer", "null"], "minimum": 1 },
+        "completed_frames": { "type": "integer", "minimum": 0 },
+        "failed_frames": { "type": "integer", "minimum": 0 },
+        "active_frames": { "type": "integer", "minimum": 0 },
+        "coverage_fraction": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "pending_questions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "models": { "type": "object", "minProperties": 1, "additionalProperties": { "$ref": "#/$defs/modelState" } },
+    "last_event_sequence": { "type": "integer", "minimum": 0 },
+    "last_updated": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "taskSummary": {
+      "type": "object",
+      "required": ["status", "checkpoint_path", "n_completed", "n_failed", "n_active"],
+      "properties": {
+        "status": { "enum": ["not_requested", "not_initialized", "pending", "queued", "running", "complete", "failed", "blocked", "skipped", "partial_approved"] },
+        "checkpoint_path": { "type": "string", "minLength": 1 },
+        "n_completed": { "type": "integer", "minimum": 0 },
+        "n_failed": { "type": "integer", "minimum": 0 },
+        "n_active": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "modelState": {
+      "type": "object",
+      "required": ["selection_index", "model_name", "environment_status", "checkpoint_status", "current_action", "last_error", "tasks", "last_updated"],
+      "properties": {
+        "selection_index": { "type": "integer", "minimum": 1 },
+        "model_name": { "type": "string", "minLength": 1 },
+        "environment_status": { "enum": ["pending", "probing", "ready", "blocked", "failed", "skipped"] },
+        "checkpoint_status": { "enum": ["pending", "probing", "ready", "blocked", "failed", "skipped"] },
+        "current_action": { "type": ["string", "null"] },
+        "last_error": { "type": ["string", "null"] },
+        "tasks": {
+          "type": "object", "required": ["single_point", "relaxation"],
+          "properties": {
+            "single_point": { "$ref": "#/$defs/taskSummary" },
+            "relaxation": { "$ref": "#/$defs/taskSummary" }
+          },
+          "additionalProperties": false
+        },
+        "last_updated": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

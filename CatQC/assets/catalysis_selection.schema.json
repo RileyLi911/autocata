@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "catalysis_selection.schema.json",
+  "title": "Version-bound catalysis selection record",
+  "type": "object",
+  "required": [
+    "execution_variant",
+    "catalysis_assessment",
+    "leaderboard_identity"
+  ],
+  "properties": {
+    "execution_variant": {
+      "$ref": "#/$defs/execution_variant"
+    },
+    "catalysis_assessment": {
+      "$ref": "#/$defs/catalysis_assessment"
+    },
+    "leaderboard_identity": {
+      "$ref": "#/$defs/leaderboard_identity"
+    }
+  },
+  "$defs": {
+    "execution_variant": {
+      "type": "object",
+      "required": [
+        "checkpoint_id",
+        "parameters",
+        "head"
+      ],
+      "properties": {
+        "checkpoint_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "head": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "catalysis_assessment": {
+      "type": "object",
+      "required": [
+        "official_repository",
+        "repository_verification",
+        "commit_sha",
+        "checked_version",
+        "search_scope",
+        "scope",
+        "sources",
+        "candidates",
+        "finding",
+        "recommended_candidate_id",
+        "decision",
+        "unresolved_conflicts"
+      ],
+      "properties": {
+        "official_repository": {
+          "type": "string",
+          "pattern": "^https://github\\.com/[^/]+/[^/]+$"
+        },
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "checked_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository_verification": {
+          "type": "object",
+          "required": [
+            "authority_url",
+            "reason",
+            "verified_by"
+          ]
+        },
+        "scope": {
+          "type": "object",
+          "required": [
+            "system",
+            "adsorbate",
+            "elements",
+            "requested_tasks",
+            "dft_reference"
+          ]
+        },
+        "search_scope": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "finding": {
+          "enum": [
+            "specialized_found",
+            "no_specialized_found_in_checked_sources",
+            "insufficient_evidence",
+            "unresolved"
+          ]
+        },
+        "unresolved_conflicts": {
+          "type": "array"
+        },
+        "recommended_candidate_id": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "object",
+          "required": [
+            "selected_candidate_id",
+            "user_requested_variant",
+            "reason",
+            "displayed_differences",
+            "confirmed",
+            "confirmed_by",
+            "confirmed_at"
+          ],
+          "properties": {
+            "user_requested_variant": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/execution_variant"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "confirmed": {
+              "type": "boolean"
+            },
+            "confirmed_by": {
+              "type": "string"
+            },
+            "confirmed_at": {
+              "type": "string"
+            }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "url",
+              "retrieved_at",
+              "content",
+              "sha256"
+            ],
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "kind": {
+                "enum": [
+                  "official_github",
+                  "official_model_card",
+                  "primary_paper",
+                  "official_docs"
+                ]
+              },
+              "content": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "candidates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "execution_variant",
+              "source_ids",
+              "applicability",
+              "limitations",
+              "compatibility",
+              "energy_semantics"
+            ],
+            "properties": {
+              "execution_variant": {
+                "$ref": "#/$defs/execution_variant"
+              },
+              "compatibility": {
+                "enum": [
+                  "compatible",
+                  "incompatible",
+                  "unresolved"
+                ]
+              },
+              "energy_semantics": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "unit",
+                  "dft_level",
+                  "reference_state",
+                  "rationale",
+                  "components_compatible"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "leaderboard_identity": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "execution_variant": {
+          "$ref": "#/$defs/execution_variant"
+        }
+      }
+    }
+  }
+}

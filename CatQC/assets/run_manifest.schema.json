@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run_manifest.schema.json",
+  "title": "CatQC run manifest v4",
+  "type": "object",
+  "required": [
+    "schema_version", "run_id", "skill_name", "created_at", "updated_at", "status",
+    "request", "request_identity_sha256", "models_manifest_sha256", "skill_root",
+    "workspace_base", "run_base", "benchmark_root", "models_manifest_path",
+    "run_state_path", "events_path", "lease_path", "scientific_definition_hash"
+  ],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "skill_name": { "const": "catqc" },
+    "created_at": { "type": "string", "minLength": 1 },
+    "updated_at": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["initialized", "active", "blocked", "complete"] },
+    "request": {
+      "type": "object",
+      "required": ["model_selection_mode", "dataset_name", "dataset_identity", "adsorbate", "model_count", "requested_tasks", "task_slug", "original_prompt"],
+      "properties": {
+        "model_selection_mode": { "enum": ["matbench_top_n", "user_specified"] },
+        "dataset_name": { "type": "string", "minLength": 1 },
+        "dataset_identity": { "type": "string", "minLength": 1 },
+        "adsorbate": { "type": "string", "minLength": 1 },
+        "model_count": { "type": "integer", "minimum": 1 },
+        "requested_tasks": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["single_point", "relaxation"] } },
+        "task_slug": { "enum": ["sp", "relax", "sp-relax"] },
+        "dft_reference_mode": { "enum": ["provided", "generate_vasp"] },
+        "original_prompt": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "request_identity_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "models_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "skill_root": { "type": "string", "minLength": 1 },
+    "workspace_base": { "type": "string", "minLength": 1 },
+    "run_base": { "type": "string", "minLength": 1 },
+    "benchmark_root": { "type": "string", "minLength": 1 },
+    "models_manifest_path": { "const": "models_manifest.json" },
+    "run_state_path": { "const": "run_state.json" },
+    "events_path": { "const": "events.jsonl" },
+    "lease_path": { "const": "control/lease.json" },
+    "scientific_definition_hash": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" }
+  },
+  "additionalProperties": false
+}

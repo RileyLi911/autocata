@@ -1,0 +1,832 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "benchmark_config.schema.json",
+  "title": "CatQC configuration v4",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "benchmark_request",
+    "checkpoint_directory_template",
+    "benchmark_root",
+    "structure_path",
+    "dft_reference_path",
+    "frame_count",
+    "adsorbate_species",
+    "adsorbate_atom_count",
+    "adsorbate_selection_rule",
+    "boundary_handling_rule",
+    "adsorbate_reference_policy",
+    "dft_target",
+    "energy_unit",
+    "alignment_rule",
+    "composition_definition",
+    "result_validation",
+    "retry_policy",
+    "scientific_exceptions",
+    "structure_indices"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 4
+    },
+    "benchmark_request": {
+      "type": "object",
+      "required": [
+        "model_selection_mode",
+        "model_count",
+        "dataset_name",
+        "adsorbate",
+        "requested_tasks"
+      ],
+      "properties": {
+        "model_selection_mode": {
+          "enum": [
+            "matbench_top_n",
+            "user_specified"
+          ]
+        },
+        "model_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "dataset_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adsorbate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dft_reference_mode": {
+          "enum": [
+            "provided",
+            "generate_vasp"
+          ]
+        },
+        "requested_tasks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "single_point",
+              "relaxation"
+            ]
+          }
+        },
+        "original_prompt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "checkpoint_directory_template": {
+      "const": "models/<model_key>/checkpoints"
+    },
+    "benchmark_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "structure_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "structure_file_type": {
+      "enum": [
+        "xyz",
+        "extxyz",
+        "cif",
+        "poscar",
+        "mixed",
+        "unknown"
+      ]
+    },
+    "structure_input": {
+      "type": "object",
+      "required": [
+        "input_path",
+        "input_mode",
+        "file_type",
+        "ordering_rule",
+        "source_files",
+        "frame_count"
+      ],
+      "properties": {
+        "input_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_mode": {
+          "enum": [
+            "single_file",
+            "directory_sorted_filename"
+          ]
+        },
+        "file_type": {
+          "enum": [
+            "xyz",
+            "extxyz",
+            "cif",
+            "poscar",
+            "mixed"
+          ]
+        },
+        "ordering_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "file_type",
+              "sha256",
+              "frame_count"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "file_type": {
+                "enum": [
+                  "xyz",
+                  "extxyz",
+                  "cif",
+                  "poscar"
+                ]
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "frame_count": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "dft_reference_path": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "frame_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "adsorbate_species": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adsorbate_atom_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "adsorbate_selection_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "boundary_handling_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adsorbate_reference_policy": {
+      "type": "object",
+      "required": [
+        "scope",
+        "geometry_source",
+        "relaxation_state",
+        "charge",
+        "spin_multiplicity",
+        "pbc",
+        "cell_policy",
+        "vacuum_A",
+        "compute_stress",
+        "shared_between_tasks",
+        "immutable_weight_reuse"
+      ],
+      "properties": {
+        "scope": {
+          "const": "per_model"
+        },
+        "geometry_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relaxation_state": {
+          "enum": [
+            "fixed",
+            "relaxed",
+            "task_specific"
+          ]
+        },
+        "charge": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "spin_multiplicity": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "pbc": {
+          "type": "boolean"
+        },
+        "cell_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vacuum_A": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "compute_stress": {
+          "type": "boolean"
+        },
+        "shared_between_tasks": {
+          "type": "boolean"
+        },
+        "immutable_weight_reuse": {
+          "enum": [
+            "forbidden",
+            "probe_required",
+            "validated"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "dft_target": {
+      "type": "object",
+      "required": [
+        "semantics"
+      ],
+      "properties": {
+        "semantics": {
+          "enum": [
+            "single_point_same_geometry",
+            "relaxed_energy",
+            "mixed_or_other"
+          ]
+        },
+        "target_column": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "formula": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "decomposed_columns": {
+          "type": "object"
+        },
+        "rounding_tolerance_eV": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "target_column"
+          ],
+          "properties": {
+            "target_column": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "required": [
+            "formula",
+            "decomposed_columns"
+          ],
+          "properties": {
+            "formula": {
+              "type": "string",
+              "minLength": 1
+            },
+            "decomposed_columns": {
+              "type": "object",
+              "minProperties": 2
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "energy_unit": {
+      "const": "eV"
+    },
+    "alignment_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "composition_definition": {
+      "const": "slab_composition_excluding_adsorbate"
+    },
+    "result_validation": {
+      "type": "object",
+      "required": [
+        "require_energy_components",
+        "energy_identity_tolerance_eV",
+        "require_relaxation_fmax",
+        "force_tolerance_eV_per_A"
+      ],
+      "properties": {
+        "require_energy_components": {
+          "const": true
+        },
+        "energy_identity_tolerance_eV": {
+          "type": "number",
+          "minimum": 0
+        },
+        "require_relaxation_fmax": {
+          "const": true
+        },
+        "force_tolerance_eV_per_A": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_abs_adsorption_energy_eV": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "relaxation": {
+      "type": "object",
+      "required": [
+        "optimizer",
+        "fallback_optimizer",
+        "optimizer_fallback_condition",
+        "max_steps",
+        "unconverged_rerun_max_steps",
+        "unconverged_rerun_required",
+        "fmax_eV_per_A",
+        "optimize_cell",
+        "slab_constraint_rule",
+        "layer_detection_rule",
+        "layer_tolerance_A",
+        "trajectory_interval",
+        "unconverged_policy",
+        "adsorbate_integrity_check",
+        "relaxed_structure_classification"
+      ],
+      "properties": {
+        "optimizer": {
+          "const": "FIRE"
+        },
+        "fallback_optimizer": {
+          "const": "BFGS"
+        },
+        "optimizer_fallback_condition": {
+          "const": "fire_unsupported"
+        },
+        "max_steps": {
+          "const": 1000
+        },
+        "unconverged_rerun_max_steps": {
+          "const": 5000
+        },
+        "unconverged_rerun_required": {
+          "const": true
+        },
+        "vasp_style_force_convergence": {
+          "const": -0.05
+        },
+        "fmax_eV_per_A": {
+          "const": 0.05
+        },
+        "optimize_cell": {
+          "const": false
+        },
+        "slab_constraint_rule": {
+          "const": "fix_bottom_1_layer_for_n_layers_lte_5_else_bottom_2_layers"
+        },
+        "layer_detection_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layer_tolerance_A": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "trajectory_interval": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "unconverged_policy": {
+          "const": "retry_then_exclude"
+        },
+        "adsorbate_energy_policy": {
+          "const": "use_adsorbate_reference_policy"
+        },
+        "adsorbate_integrity_check": {
+          "type": "object",
+          "required": [
+            "enabled",
+            "method",
+            "definition",
+            "use_mic"
+          ],
+          "properties": {
+            "enabled": {
+              "const": true
+            },
+            "method": {
+              "enum": [
+                "explicit_bond_thresholds",
+                "connectivity_graph",
+                "custom"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 1
+            },
+            "use_mic": {
+              "type": "boolean"
+            },
+            "monitored_bonds": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "notes": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "relaxed_structure_classification": {
+          "type": "object",
+          "required": [
+            "category_priority",
+            "source_types",
+            "pbc",
+            "use_mic",
+            "adsorbate_indices",
+            "surface_indices",
+            "monitored_bonds",
+            "covalent_radii",
+            "severe_overlap_covalent_ratio_threshold",
+            "catastrophic_surface_max_displacement_A",
+            "fixed_atom_max_displacement_A",
+            "dissociation_bond_distance_A",
+            "detached_final_contact_distance_A",
+            "detached_contact_increase_A"
+          ],
+          "properties": {
+            "category_priority": {
+              "const": [
+                "Invalid",
+                "Unconverged",
+                "Dissociated",
+                "Detached",
+                "Intact and converged"
+              ]
+            },
+            "source_types": {
+              "type": "array",
+              "const": [
+                "mlp",
+                "vasp"
+              ]
+            },
+            "pbc": {
+              "type": "array",
+              "items": {
+                "type": "boolean"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "use_mic": {
+              "const": true
+            },
+            "adsorbate_indices": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "surface_indices": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "monitored_bonds": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "covalent_radii": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "severe_overlap_covalent_ratio_threshold": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "catastrophic_surface_max_displacement_A": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "fixed_atom_max_displacement_A": {
+              "const": 0.05
+            },
+            "dissociation_bond_distance_A": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "detached_final_contact_distance_A": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "detached_contact_increase_A": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "notes": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "retry_policy": {
+      "type": "object",
+      "required": [
+        "max_attempts",
+        "per_frame_timeout_seconds",
+        "per_frame_timeout_scope",
+        "systematic_failure_threshold"
+      ],
+      "properties": {
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 10
+        },
+        "per_frame_timeout_seconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "per_frame_timeout_scope": {
+          "const": "mlp_only"
+        },
+        "systematic_failure_threshold": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "scientific_exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "dft_reference": {
+      "type": "object",
+      "required": [
+        "mode",
+        "energy_formula",
+        "execution_relation",
+        "profile_path",
+        "execution_profile_path",
+        "structure_derivation",
+        "partial_failure_policy"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "provided",
+            "generate_vasp"
+          ]
+        },
+        "energy_formula": {
+          "const": "E_slab_ads_relaxed - E_clean_slab_relaxed - E_isolated_adsorbate_relaxed"
+        },
+        "execution_relation": {
+          "const": "parallel_with_mlp_merge_barrier"
+        },
+        "profile_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "execution_profile_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "structure_derivation": {
+          "type": "object",
+          "required": [
+            "adsorbate_indices",
+            "derive_clean_slab",
+            "derive_isolated_adsorbate",
+            "deduplicate_by_structure_profile_hash"
+          ],
+          "properties": {
+            "adsorbate_indices": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "derive_clean_slab": {
+              "const": true
+            },
+            "derive_isolated_adsorbate": {
+              "const": true
+            },
+            "deduplicate_by_structure_profile_hash": {
+              "const": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "partial_failure_policy": {
+          "const": "block_until_user_approval"
+        }
+      },
+      "additionalProperties": false
+    },
+    "structure_indices": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "Complete frozen input positional indices 0 through frame_count - 1, before model evaluation."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "benchmark_request": {
+            "properties": {
+              "requested_tasks": {
+                "contains": {
+                  "const": "relaxation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "relaxation"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "benchmark_request": {
+            "properties": {
+              "dft_reference_mode": {
+                "const": "provided"
+              }
+            },
+            "required": [
+              "dft_reference_mode"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dft_reference_path": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "benchmark_request": {
+            "properties": {
+              "dft_reference_mode": {
+                "const": "generate_vasp"
+              }
+            },
+            "required": [
+              "dft_reference_mode"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "dft_reference"
+        ],
+        "properties": {
+          "dft_reference_path": {
+            "type": "null"
+          },
+          "dft_reference": {
+            "properties": {
+              "mode": {
+                "const": "generate_vasp"
+              },
+              "profile_path": {
+                "const": "dft/vasp_profile.json"
+              },
+              "execution_profile_path": {
+                "const": "dft/execution_profile.json"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

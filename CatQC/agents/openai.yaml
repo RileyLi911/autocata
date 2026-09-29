@@ -1,0 +1,7 @@
+interface:
+  display_name: "CatQC"
+  short_description: "Resumable MLP benchmarks with supplied or VASP DFT references"
+  default_prompt: "Use $catqc to benchmark either the top {N} Matbench Discovery models or these named models: {model names}. Freeze every model identity first, then run {adsorbate} on {dataset name or path} with {single-point energy, relaxation, or both}, using {workspace_base} for the resumable v4 run. Use my aligned DFT table when supplied, or generate relaxed slab+adsorbate, clean-slab, and isolated-adsorbate VASP references through DPDispatcher after I confirm the VASP and POTCAR profile."
+
+policy:
+  allow_implicit_invocation: true

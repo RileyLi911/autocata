@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lease.schema.json",
+  "title": "Single-writer controller lease v4",
+  "type": "object",
+  "required": ["schema_version", "run_id", "owner_id", "hostname", "pid", "status", "acquired_at", "heartbeat_at", "expires_at", "heartbeat_interval_seconds", "lease_timeout_seconds"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "owner_id": { "type": "string", "minLength": 1 },
+    "hostname": { "type": "string", "minLength": 1 },
+    "pid": { "type": "integer", "minimum": 1 },
+    "status": { "enum": ["active", "released"] },
+    "acquired_at": { "type": "string", "minLength": 1 },
+    "heartbeat_at": { "type": "string", "minLength": 1 },
+    "expires_at": { "type": "string", "minLength": 1 },
+    "heartbeat_interval_seconds": { "const": 60 },
+    "lease_timeout_seconds": { "const": 900 }
+  },
+  "additionalProperties": false
+}

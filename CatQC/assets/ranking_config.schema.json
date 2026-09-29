@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Final model ranking settings",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "reliability_threshold",
+    "raw_weights",
+    "normalized_weights",
+    "selection_source"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "reliability_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "raw_weights": {
+      "type": "object",
+      "required": [
+        "relax_mae",
+        "sp_mae",
+        "spearman"
+      ],
+      "properties": {
+        "relax_mae": {
+          "type": "number",
+          "minimum": 0
+        },
+        "sp_mae": {
+          "type": "number",
+          "minimum": 0
+        },
+        "spearman": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "normalized_weights": {
+      "type": "object",
+      "required": [
+        "relax_mae",
+        "sp_mae",
+        "spearman"
+      ],
+      "properties": {
+        "relax_mae": {
+          "type": "number",
+          "minimum": 0
+        },
+        "sp_mae": {
+          "type": "number",
+          "minimum": 0
+        },
+        "spearman": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "selection_source": {
+      "type": "object",
+      "required": [
+        "reliability_threshold",
+        "weights"
+      ],
+      "properties": {
+        "reliability_threshold": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weights": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$comment": "rank_models.validate_settings additionally enforces finite values, positive total raw weight and exact normalized weights."
+}

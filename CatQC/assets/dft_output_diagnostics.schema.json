@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dft_output_diagnostics.schema.json",
+  "title": "DFT output diagnostic evidence v4",
+  "type": "object",
+  "required": ["schema_version", "calculation_id", "observed_at", "termination_allowed", "termination_requested", "reason", "matched_rules", "files"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "calculation_id": { "type": "string", "minLength": 1 },
+    "observed_at": { "type": "string", "minLength": 1 },
+    "termination_allowed": { "type": "boolean" },
+    "termination_requested": { "type": "boolean" },
+    "reason": { "type": "string", "minLength": 1 },
+    "matched_rules": { "type": "array", "items": { "type": "string" } },
+    "electronic_steps": { "type": "array", "items": { "type": "object" } },
+    "files": { "type": "object" },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

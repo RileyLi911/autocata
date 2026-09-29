@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "job_status.schema.json",
+  "title": "Per-model task job status v4",
+  "type": "object",
+  "required": ["schema_version", "run_id", "model_key", "task", "run_method", "state", "submit_time", "last_checked", "log_path", "result_path", "active_indices"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "model_key": { "type": "string", "minLength": 1 },
+    "task": { "enum": ["single_point", "relaxation"] },
+    "run_method": { "enum": ["slurm", "nohup", "local_foreground", "other"] },
+    "job_id": { "type": ["string", "integer", "null"] },
+    "pid": { "type": ["integer", "null"] },
+    "state": { "enum": ["queued", "running", "completed", "failed", "cancelled", "preempted", "timeout", "out_of_memory", "unknown"] },
+    "active_indices": { "type": "array", "uniqueItems": true, "items": { "type": "integer", "minimum": 0 } },
+    "submit_time": { "type": "string", "minLength": 1 },
+    "last_checked": { "type": "string", "minLength": 1 },
+    "exit_code": { "type": ["integer", "null"] },
+    "log_path": { "type": "string", "minLength": 1 },
+    "result_path": { "type": "string", "minLength": 1 },
+    "status_file_path": { "type": ["string", "null"] },
+    "scheduler_evidence": { "type": ["object", "null"] }
+  },
+  "additionalProperties": false
+}

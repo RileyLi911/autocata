@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dft_scheduler_evidence.schema.json",
+  "title": "External scheduler evidence for DFT reconciliation v4",
+  "type": "object",
+  "required": ["schema_version", "run_id", "queried_at", "source", "jobs"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "queried_at": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "minLength": 1 },
+    "jobs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["calculation_id", "state"],
+        "properties": {
+          "calculation_id": { "type": "string", "minLength": 1 },
+          "state": { "enum": ["queued", "running", "completed", "failed", "cancelled", "preempted", "out_of_memory", "timeout", "unknown"] },
+          "job_id": { "type": ["string", "integer", "null"] },
+          "pid": { "type": ["integer", "null"] },
+          "scheduler_state": { "type": ["string", "null"] },
+          "message": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

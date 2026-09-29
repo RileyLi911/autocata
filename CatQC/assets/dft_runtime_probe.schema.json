@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dft_runtime_probe.schema.json",
+  "title": "Secret-free remote DFT runtime probe v4",
+  "type": "object",
+  "required": ["schema_version", "run_id", "passed", "submission_shell_stack", "job_shell_stack", "vasp_version", "mpi_launcher", "mpi_version", "cpu_available", "memory_bytes", "smoke_test"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "passed": { "type": "boolean" },
+    "submission_shell_stack": { "type": "string", "minLength": 1 },
+    "job_shell_stack": { "type": "string", "minLength": 1 },
+    "vasp_version": { "type": "string", "minLength": 1 },
+    "mpi_launcher": { "type": "string", "minLength": 1 },
+    "mpi_version": { "type": "string", "minLength": 1 },
+    "cpu_available": { "type": "integer", "minimum": 1 },
+    "memory_bytes": { "type": "integer", "minimum": 1 },
+    "scheduler": { "type": "object" },
+    "smoke_test": { "type": "object", "required": ["passed"], "properties": { "passed": { "type": "boolean" }, "calculation_id": { "type": "string" }, "exit_code": { "type": ["integer", "null"] } }, "additionalProperties": true }
+  },
+  "additionalProperties": false
+}

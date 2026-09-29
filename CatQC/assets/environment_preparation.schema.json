@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "environment_preparation.schema.json",
+  "title": "Auditable model environment preparation record v4",
+  "type": "object",
+  "required": ["schema_version", "model_key", "official_guides", "host_snapshot", "toolchain_decision", "mutation_authorization", "status"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "model_key": { "type": "string", "minLength": 1 },
+    "official_guides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["kind", "source_url", "retrieved_at", "artifact_path", "content_sha256", "authority", "used_for", "capture_method", "verification_status", "final_url", "http_status", "content_type", "etag", "official_hosts"],
+        "properties": {
+          "kind": { "enum": ["repository_readme", "environment_file", "install_doc", "model_card", "package_doc", "release_note"] },
+          "source_url": { "type": "string", "format": "uri" },
+          "revision": { "type": ["string", "null"] },
+          "retrieved_at": { "type": "string", "minLength": 1 },
+          "artifact_path": { "type": "string", "pattern": "^models/[^/\\]+/resources/official_guides/" },
+          "content_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "authority": { "enum": ["official_repository", "official_model_card", "official_package_docs", "official_release"] },
+          "used_for": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "commands_preserved_verbatim": { "type": "boolean" }
+          ,"capture_method": { "enum": ["http_fetched", "local_user_attested"] },
+          "verification_status": { "enum": ["http_response_recorded", "user_attested_local_source"] },
+          "final_url": { "type": "string", "minLength": 1 },
+          "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+          "content_type": { "type": ["string", "null"] },
+          "etag": { "type": ["string", "null"] }
+          ,"official_hosts": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+          ,"scope": { "enum": ["environment", "usage", "both"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "host_snapshot": {
+      "type": "object",
+      "required": ["captured_at", "hostname", "snapshot_path", "snapshot_sha256", "os", "python_candidates", "cuda", "package_managers", "filesystem", "network"],
+      "properties": {
+        "captured_at": { "type": "string", "minLength": 1 },
+        "hostname": { "type": "string", "minLength": 1 },
+        "snapshot_path": { "type": "string", "pattern": "^models/[^/\\\\]+/environment_preparation\\.host_snapshot\\.json$" },
+        "snapshot_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "os": { "type": "object" },
+        "python_candidates": { "type": "array", "items": { "type": "object" } },
+        "cuda": { "type": "object" },
+        "package_managers": { "type": "object" },
+        "filesystem": { "type": "object" },
+        "network": { "type": "object" },
+        "agent_runtime_candidates": { "type": "array", "items": { "type": "object" } },
+        "package_versions": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "toolchain_decision": {
+      "type": "object",
+      "required": ["selected", "priority_rank", "owner", "executable", "version", "reason", "alternatives_checked"],
+      "properties": {
+        "selected": { "enum": ["uv", "conda", "mamba", "user_decision_pending"] },
+        "priority_rank": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "owner": { "enum": ["user", "agent", "system", "none"] },
+        "executable": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "reason": { "type": "string", "minLength": 1 },
+        "alternatives_checked": { "type": "array", "items": { "type": "object" } }
+      },
+      "additionalProperties": false
+    },
+    "mutation_authorization": {
+      "type": "object",
+      "required": ["environment_creation_allowed", "package_install_allowed", "uv_install_allowed"],
+      "properties": {
+        "policy": { "enum": ["dry_run", "ask_once", "auto_after_confirmation"] },
+        "environment_creation_allowed": { "type": "boolean" },
+        "package_install_allowed": { "type": "boolean" },
+        "uv_install_allowed": { "type": "boolean" },
+        "approved_by": { "type": ["string", "null"] },
+        "approved_at": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "installation_plan": {
+      "type": "object",
+      "required": ["artifact_path", "sha256", "source_guide_paths", "python", "framework", "gpu_required", "commands", "packages", "environment_variables", "smoke_tests"],
+      "properties": {
+        "artifact_path": { "type": "string", "pattern": "^models/[^/\\\\]+/resources/installation_plans/" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "source_guide_paths": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "python": { "type": "object" },
+        "framework": { "enum": ["pytorch", "tensorflow", "jax"] },
+        "gpu_required": { "const": true },
+        "commands": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "packages": { "type": "array", "items": { "type": "object" } },
+        "environment_variables": { "type": "object" },
+        "smoke_tests": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "status": { "enum": ["guides_collected", "host_inspected", "toolchain_selected", "blocked", "ready_for_creation", "created", "validated"] }
+  },
+  "additionalProperties": false
+}

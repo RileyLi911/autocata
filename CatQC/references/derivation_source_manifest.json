@@ -1,0 +1,869 @@
+{
+  "schema_version": 2,
+  "project": "CatQC",
+  "derived_version": "20260929-catqc-dft-defaults-full-sp",
+  "source_version": "20260920-autocata-catqc-english",
+  "source_skill_subdirectory": "AutoCata/CatQC",
+  "derived_at": "2026-09-29T09:24:14.799109+00:00",
+  "source_archive_sha256": "0c8dce7fa01707e549abf123897f83dd9418843621ad371b2fb6bc96c76c105a",
+  "source_release_unchanged_verified_against_archive": true,
+  "source_files": [
+    {
+      "path": ".gitignore",
+      "size_bytes": 351,
+      "sha256": "c068f0ccbf26ddd43b4a15887cfb4b6b7d959d7cb53a0dba2b15cf41b681907b"
+    },
+    {
+      "path": "AutoCata/CatQC/agents/openai.yaml",
+      "size_bytes": 670,
+      "sha256": "d755a78606df790373f9b2d194953d83c73acbc9f68ac92eb43b84f4a0d2032a"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/benchmark_config.schema.json",
+      "size_bytes": 13751,
+      "sha256": "0a61e893d3b42c86bb023ffd09c2357a64560c58154f5ac8d0a4dfe20c00fe39"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/catalysis_selection.schema.json",
+      "size_bytes": 5877,
+      "sha256": "917d25e07a3c815f1ff4cb851478ec318d435185076be42bd4f792c323efcc79"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/checkpoint_manifest.schema.json",
+      "size_bytes": 1300,
+      "sha256": "af86fe0551b548760a764ee3440e98b68c7ca8377e44315cd5e8d11b0f6701ec"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_checkpoint.schema.json",
+      "size_bytes": 3275,
+      "sha256": "cde5ecad9106e2300df3d5c97c20b8b4f6ef7681cb4ef07437d2915c5cd9db5d"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_execution_preflight.schema.json",
+      "size_bytes": 1044,
+      "sha256": "43a7d39cd9b0acdb313372a989ef6da815a4958fe75ada46ac9d1d2fb5fe5fff"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_execution_profile.schema.json",
+      "size_bytes": 4337,
+      "sha256": "9775d2a8b887bec164532d9f731dd19ffd0698e836cd9d74dc2482525cb89ab6"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_job_status.schema.json",
+      "size_bytes": 1523,
+      "sha256": "54b35b86ea2977984b47f882acfce47cfe0e04a793e9504a1fb7b2e95b00c7ea"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_manifest.schema.json",
+      "size_bytes": 3169,
+      "sha256": "1ba7bcdf1c6e76714987cfb2ecf35710fe5f77cabb140bba6673ca0733299d66"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_output_diagnostics.schema.json",
+      "size_bytes": 965,
+      "sha256": "638b38c7200e2d8cd068e33d8d6a0465d4693d23e6e38276ce97224f17bdf026"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_runtime_probe.schema.json",
+      "size_bytes": 1264,
+      "sha256": "9317b32662fbf5bcee2c03e71090f8b4eae8a78c7d02f827160d204e48976ee3"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_scheduler_evidence.schema.json",
+      "size_bytes": 1209,
+      "sha256": "59760a64da43e1b796ee6e7da7364528927651f285ba5b7c3f5be9a37a2776c3"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/dft_state.schema.json",
+      "size_bytes": 2285,
+      "sha256": "e32aa4fda16a9880e89bd47bd16c3217a40b877437c4ec4fd90bbcb40ed19481"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/environment_execution.schema.json",
+      "size_bytes": 977,
+      "sha256": "ce348cf2a254f0046a90b377dd152f2f3cdcdc75397356da882084ec26343867"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/environment_preparation.schema.json",
+      "size_bytes": 5931,
+      "sha256": "210f5d220d29269d087e012cfc1cfdde686ab4e1aedf1a32a12c956059a48f7b"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/frame_artifact_manifest.schema.json",
+      "size_bytes": 3513,
+      "sha256": "f9405da50faeb2ef09b7c1cb7db6794f07e373955ccb438c4ad16aba887cd626"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/frame_checkpoint.schema.json",
+      "size_bytes": 2193,
+      "sha256": "4fb30ca3b62b2312839f3d9f5bee567e1917b1d3d67a93e7040553a46244e573"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/job_status.schema.json",
+      "size_bytes": 1424,
+      "sha256": "7fba82d242c0602ff995655f7f475cc7854178c31bf0f0976e34770f5742836b"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/lease.schema.json",
+      "size_bytes": 988,
+      "sha256": "7d11b298ee901b992c12c4a66cae6a58e60b52b5da323d411141fe11758216b1"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/model_config.schema.json",
+      "size_bytes": 8950,
+      "sha256": "30e876f936b664c7500c794c03e4d39672c60a028788a5ab1abf6e4ba72056ba"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/model_usage_plan.schema.json",
+      "size_bytes": 4912,
+      "sha256": "bf3c911afe466cd21bb1dfd314b0185a700f74f2c37fbd2db00aa4c607537205"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/models_manifest.schema.json",
+      "size_bytes": 4434,
+      "sha256": "8913581bdfea4327f31f0d8d827626620ae6e9741afb66212faf77038e2ed238"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/official_usage_smoke_test.schema.json",
+      "size_bytes": 3398,
+      "sha256": "fbc51b9c8f3a48d3584d9f49b238e05c71ee72d9ee91395c116b6399b5e6b3a0"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/output_csv_columns.md",
+      "size_bytes": 5013,
+      "sha256": "00a9687a1a28833f913761ea98becd7b3719c88dea54d220f3a2ce471acaf8fa"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/ranking_config.schema.json",
+      "size_bytes": 1933,
+      "sha256": "6448af1b3b8659124326212a7386e47f2c3805fa26e0cad855b317e8ff39ce43"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/relaxed_structure_index.schema.json",
+      "size_bytes": 1037,
+      "sha256": "da4d11546413e91829d75b93aa4f3000ef86a03ba4540f2b58283e9bce401fc2"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/run_manifest.schema.json",
+      "size_bytes": 2551,
+      "sha256": "f989b155daac2b9f3f3da860e8b56df36ef42db86a5a0eccd76c8cc7fe8fe790"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/run_state.schema.json",
+      "size_bytes": 5634,
+      "sha256": "656363d4b962abaa88ac64d86a351edb8f040c5b8bc448b09d3d01c799259852"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/runtime_provenance.schema.json",
+      "size_bytes": 4609,
+      "sha256": "2a9e28b97600e14dd0fd0bd08630c67ef8d66268ab02fb9e994919e170718672"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/script_calculator_isolation.schema.json",
+      "size_bytes": 1556,
+      "sha256": "5d3c934d5f51c55c15ce1580fd11cf82ee2528f0f1b999342322be240ecdb017"
+    },
+    {
+      "path": "AutoCata/CatQC/assets/vasp_profile.schema.json",
+      "size_bytes": 4310,
+      "sha256": "3374a2887687d011887211b5ddc8f900c96f8f7256b9acbcf2fdcf187c930484"
+    },
+    {
+      "path": "AutoCata/CatQC/README.md",
+      "size_bytes": 11758,
+      "sha256": "bf19ed12e79f58a2e37f7a14e40031e6145edae88cf9553b02c4371a1298c6cd"
+    },
+    {
+      "path": "AutoCata/CatQC/references/catalysis-aware-selection.md",
+      "size_bytes": 10523,
+      "sha256": "e3d013ec33c04eef97d02f68dab7df25c70b0e2cca287a8d90b008c3f8939332"
+    },
+    {
+      "path": "AutoCata/CatQC/references/derivation_source_manifest.json",
+      "size_bytes": 14981,
+      "sha256": "69b1d88ab5da19461fbd753d0cb3fea4b7ec2fe5798df3803b366cd5e1a21597"
+    },
+    {
+      "path": "AutoCata/CatQC/references/dft-vasp-reference.md",
+      "size_bytes": 8953,
+      "sha256": "8b37878ec262050b02a6c6283b566b8bd2d66c43069915da0ceeaaa323ac8ee7"
+    },
+    {
+      "path": "AutoCata/CatQC/references/evaluation-cases.md",
+      "size_bytes": 7691,
+      "sha256": "c19df7f083be925568c7ff8e152bd222d21c34040121cda00465fe843753f889"
+    },
+    {
+      "path": "AutoCata/CatQC/references/model-ranking.md",
+      "size_bytes": 4846,
+      "sha256": "c07eafa35f6f422884a37e80db3773222a0a1e3d3d67cd75f2c29df51a59c326"
+    },
+    {
+      "path": "AutoCata/CatQC/references/model-selection-report.md",
+      "size_bytes": 8612,
+      "sha256": "1bf0be1ffb1aa4b8732e229648c343602c2aaa269a250561ae5e2e2be695d17a"
+    },
+    {
+      "path": "AutoCata/CatQC/references/relaxed-structure-classification.md",
+      "size_bytes": 2485,
+      "sha256": "dc358928d597a21ead3603227e313ba8d182ca30ca3683e6108df25b6a9130fd"
+    },
+    {
+      "path": "AutoCata/CatQC/references/release_freeze_manifest.json",
+      "size_bytes": 15368,
+      "sha256": "49758a4e8603af9ab6babb81709a2ecac8a52bffc8b6d5f793f48764e81f1963"
+    },
+    {
+      "path": "AutoCata/CatQC/references/request-model-selection.md",
+      "size_bytes": 3100,
+      "sha256": "fe078efbf3b046873a228c5f15db23551de4414e2cb67f607bc2df7c832e7a13"
+    },
+    {
+      "path": "AutoCata/CatQC/references/runtime-compatibility.md",
+      "size_bytes": 3956,
+      "sha256": "9bf6b7a95184d011d2b3474d587aa2cee4f6a74c96c6df9a8ae5bb1ab542c72d"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step0-workdir.md",
+      "size_bytes": 4557,
+      "sha256": "12f5f0f4391cca1e6de740f1aaa610a5a9d90b487bb9f677e97589a8ece841ca"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step1-inputs.md",
+      "size_bytes": 12264,
+      "sha256": "e3b4bbe733bd6d9d7c0964f3739f51112f7639015ffe2346fa9ab368283ea1d7"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step2-browser-dom-extraction.md",
+      "size_bytes": 4127,
+      "sha256": "5c147b7b8d50bd9cb0054f7a190aa9a1366571dab78bff77de2507e41e060834"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step2-leaderboard.md",
+      "size_bytes": 10281,
+      "sha256": "40d77ca513a9ba612b0765a537e7a804d0473c9a435c4a740eda5123af7c1e02"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step3-model-run.md",
+      "size_bytes": 28372,
+      "sha256": "ef53b9faf378c5505290161e155de7cc8e647ceb00b001a815f10ba247a6a8b5"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step3-script-calculator-integrity.md",
+      "size_bytes": 7550,
+      "sha256": "ee9d28217099a941f41227511acc137652e20cfdc97e4ebdd2b3874cecf27346"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step4-merge.md",
+      "size_bytes": 7760,
+      "sha256": "74686c03a9e5adab48ccb850384588d4d390c42bace536490ebad3abd6fb3902"
+    },
+    {
+      "path": "AutoCata/CatQC/references/step5-final-audit.md",
+      "size_bytes": 8184,
+      "sha256": "4450db581dc5cf43784657dc98c194299cf415c451eac27b50c55602c4fb2be1"
+    },
+    {
+      "path": "AutoCata/CatQC/references/validation_record.json",
+      "size_bytes": 3302,
+      "sha256": "ae1c23379fd8d057324cd13d961336a3115db6ce570ad696b6e6420bf2bb6303"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/audit_completion.py",
+      "size_bytes": 10026,
+      "sha256": "31c8966b9bd755f286a85f9aa139afe19de38e3c6484f3f83abd2c02ffeeacce"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/catalysis_selection.py",
+      "size_bytes": 16914,
+      "sha256": "2383cdb37e49ed78ce4cf17e7d14845103cbeb5ab427f4e0d303973d31e1bf36"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/catalysis_selection_self_test.py",
+      "size_bytes": 9733,
+      "sha256": "d6f290a88a764b5be00dca769c59cae7fb58a062f3b77b7a723c0bab4530981c"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/catalysis_test_support.py",
+      "size_bytes": 3889,
+      "sha256": "2b47bab9c116b65ede71ccf4c1876232e90f9046e7da7751c118fa6d4b7261b7"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/catqc_identity_self_test.py",
+      "size_bytes": 3158,
+      "sha256": "9e3614b4532cf6e61504474049f65af09e9fc8f0b11c338f2a532b0d27513f12"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/classify_relaxed_frame.py",
+      "size_bytes": 4303,
+      "sha256": "6278875e1c62f0288db8b597a06514027055e1f3905fba1deaff4d2c3cd48712"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/classify_relaxed_frame_self_test.py",
+      "size_bytes": 1844,
+      "sha256": "200d9e4494fe9800f49131b34356ccc9533061c6ee47d0f644e4d66f0b005099"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/common.py",
+      "size_bytes": 31945,
+      "sha256": "d330ef9c39b72b7af66e9075ffd1c033e06fe10ed23a7a687ef5120369b208ee"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/dft_reference_control.py",
+      "size_bytes": 83198,
+      "sha256": "5173e2bb90897cd081736b9e978ec876ab199d6077bbe760253724f80cff8681"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/dft_self_test.py",
+      "size_bytes": 14310,
+      "sha256": "7501ac81d17ba95b4d2dc61391d036e440becf4ef2836bd81a7c25715cc6170c"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/environment_install_control.py",
+      "size_bytes": 11558,
+      "sha256": "5b63b20662faafeadc411e217255dcaa3de0ba5dbdc6df110019265c384e19f9"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/environment_preparation_control.py",
+      "size_bytes": 19769,
+      "sha256": "cebd7c9f86b39c79a4d97363c987c921761a9eba04ba52a884fefcbea8fb2b79"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/environment_preparation_self_test.py",
+      "size_bytes": 3183,
+      "sha256": "e183004b2f8ba87cf3eb4ee10a0c1d055fb0758da003297972effb001b43a052"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/frame_artifact_self_test.py",
+      "size_bytes": 3857,
+      "sha256": "6cc333b1e32a5d248e3c129ba03a948d9171abd45348d975fec33a14274df3f2"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/gpu_runtime_probe.py",
+      "size_bytes": 4507,
+      "sha256": "9894f42f80980952695b422e5cc9544c02c957bb6b98fbc4b993c3f933bc25b9"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/merge_benchmark_results.py",
+      "size_bytes": 21678,
+      "sha256": "493496776160500ec756dbea2b696eb83cee3ab5eebee39445975e37e8a3dc76"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/model_selection_report.py",
+      "size_bytes": 28019,
+      "sha256": "7c99687e662b00562f83a2627671e3017a5fc8189a0d2fccb83eaca4ff7121ea"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/model_selection_report_self_test.py",
+      "size_bytes": 13397,
+      "sha256": "3c8d68d61a8f1a8fd9dba29cfbb1aca26db4d7f31be3bed9309a627bd700ef2d"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/model_usage_control.py",
+      "size_bytes": 17888,
+      "sha256": "6308c226d039255248679287ba703cad9bad20fd537c1f43b6db417efbfade1b"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/model_usage_self_test.py",
+      "size_bytes": 6477,
+      "sha256": "23e95883df68aae5360eacfbf22d52b9d3aafe4cfb7653ad46ab054941edf709"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/pareto_robust_model_comparison.py",
+      "size_bytes": 283,
+      "sha256": "7d09889c93f057a902c25dd599bdea8736faa0fd9842d19402237a7bd23d4cbb"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/probe_environment.py",
+      "size_bytes": 4285,
+      "sha256": "d8f3e5406129fab24c3178498575dbbbc64f1e10074738f4c91f08c2df06d5a5"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/rank_models.py",
+      "size_bytes": 15571,
+      "sha256": "8a80eca13357a349ad9b08ddac63aa53c74b19c9b379e391ae4d100c2a935638"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/rank_models_self_test.py",
+      "size_bytes": 8367,
+      "sha256": "ba4a0c145b4673c0c7cfeb08a8268b4c8d879214d35bd0c687048d7489e238da"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/relaxed_poscar_self_test.py",
+      "size_bytes": 1473,
+      "sha256": "78a2db8ecc4049663c46bf7850f83ddbd80f53f42f6ddde20223008cc897b69a"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/relaxed_structure_classification.py",
+      "size_bytes": 14608,
+      "sha256": "7ddaa60ddb32ad12eea3929647e798a02af1c978566bac57882c034d5c730f76"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/relaxed_structure_classification_self_test.py",
+      "size_bytes": 3052,
+      "sha256": "69d4b2a9da6b9038bcd5f5ee022d9c1133a893c418d1d72467be6dc625d936e0"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/run_control.py",
+      "size_bytes": 57414,
+      "sha256": "d5d3062a444c52235a22e1be9f600a347ff53911c6bbabfcbeaeae999f7f6bd0"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/self_test.py",
+      "size_bytes": 14776,
+      "sha256": "10bf93df8a19dbe9e919c79c3b92aa6c6b65abd81264149a9433659032783572"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/structure_input_self_test.py",
+      "size_bytes": 3120,
+      "sha256": "371e382e729aa1b2011b9419d2454d9868780bc19573f54d5d37bcbb4a0b3ce2"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/validate_run.py",
+      "size_bytes": 51493,
+      "sha256": "23dc350aa4481323853037d785da0b09642437f67504767e1cf1d67fdc9e1652"
+    },
+    {
+      "path": "AutoCata/CatQC/scripts/validate_skill.py",
+      "size_bytes": 2698,
+      "sha256": "2418ad733f8d4ae4d3559007c08c6c9bafc36a8ddda91b86fd06b82b4f69e8b3"
+    },
+    {
+      "path": "AutoCata/CatQC/SKILL.md",
+      "size_bytes": 20055,
+      "sha256": "5881fa828cbe26aa11172b28d805714070f04eb7194addabe8ea3d7d9c11de9f"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 3010,
+      "sha256": "55e556162c1d44de2193c84abf7b905e891fe7185dcf02ec07f0f2cab22531d2"
+    }
+  ],
+  "prior_derivation_record": {
+    "schema_version": 1,
+    "source_version": "20260920-weighted-model-ranking",
+    "derived_version": "catqc-20260920",
+    "derived_at": "2026-09-20T13:39:34.358096+00:00",
+    "purpose": "English-language CatQC skill for AutoCata, with CatQC identity and workspace boundaries",
+    "source_file_count": 82,
+    "files": [
+      {
+        "path": "agents/openai.yaml",
+        "size_bytes": 701,
+        "sha256": "7b6ea2c6d8de787318b7c151037ec44e92615916e09d2995d89e3129a117136f"
+      },
+      {
+        "path": "assets/benchmark_config.schema.json",
+        "size_bytes": 13496,
+        "sha256": "15c58829506aa3f1f72114bba7becaa0b4b9be34f844b163852ded066d9cca72"
+      },
+      {
+        "path": "assets/catalysis_selection.schema.json",
+        "size_bytes": 5877,
+        "sha256": "917d25e07a3c815f1ff4cb851478ec318d435185076be42bd4f792c323efcc79"
+      },
+      {
+        "path": "assets/checkpoint_manifest.schema.json",
+        "size_bytes": 1269,
+        "sha256": "7c4ac296df2aa1dfb86712c5baf94e83048acba9eedbf4e65ea9d354af2ca286"
+      },
+      {
+        "path": "assets/dft_checkpoint.schema.json",
+        "size_bytes": 3221,
+        "sha256": "dde29927a344d274093100c319d217a2c7dc9d66878441c0d395dbb15aa4fd34"
+      },
+      {
+        "path": "assets/dft_execution_preflight.schema.json",
+        "size_bytes": 1023,
+        "sha256": "64f1ceac30f891a76859ae1408f8f1e112063d81147435b56d4ecd85e121874c"
+      },
+      {
+        "path": "assets/dft_execution_profile.schema.json",
+        "size_bytes": 4249,
+        "sha256": "f0128b7de108b27a60df1674c1df7daaf1b100945638d03fa9a4afb45dcba6a8"
+      },
+      {
+        "path": "assets/dft_job_status.schema.json",
+        "size_bytes": 1495,
+        "sha256": "97d394176ff4f6736a3a69e281947ae619e2967846e010d35b1844779aa4d887"
+      },
+      {
+        "path": "assets/dft_manifest.schema.json",
+        "size_bytes": 3135,
+        "sha256": "dc705a849ac53ec1b30e6ed6f1da01fb23c3feeeda2e5807998de7a9223797d4"
+      },
+      {
+        "path": "assets/dft_output_diagnostics.schema.json",
+        "size_bytes": 945,
+        "sha256": "192141c44d9ec6f1eee57af86c00263096182fc29751b8fc8a1ed50a911a8c37"
+      },
+      {
+        "path": "assets/dft_runtime_probe.schema.json",
+        "size_bytes": 1242,
+        "sha256": "d02aa1f44b3fb9ab493563fd44775faecce49410fe53e3b035c91ac506ed0514"
+      },
+      {
+        "path": "assets/dft_scheduler_evidence.schema.json",
+        "size_bytes": 1179,
+        "sha256": "0484c380ff646be76b14812d81fbeb7413edcace50dbe13110f7d42f42e0fcf0"
+      },
+      {
+        "path": "assets/dft_state.schema.json",
+        "size_bytes": 2251,
+        "sha256": "b06b8427f8f248c27ea80cb197d0287c8c99674a8a6be95110089bcc36490253"
+      },
+      {
+        "path": "assets/environment_execution.schema.json",
+        "size_bytes": 957,
+        "sha256": "612208b9d16dfbbb53fa25faa7979a275c532a6ff8237a2fa9531c616248b239"
+      },
+      {
+        "path": "assets/environment_preparation.schema.json",
+        "size_bytes": 5827,
+        "sha256": "2e8fd79715ce6059c5454a9f9e1d00e8af6454c30a9ffefb5340aac908c2ff57"
+      },
+      {
+        "path": "assets/frame_artifact_manifest.schema.json",
+        "size_bytes": 3513,
+        "sha256": "f9405da50faeb2ef09b7c1cb7db6794f07e373955ccb438c4ad16aba887cd626"
+      },
+      {
+        "path": "assets/frame_checkpoint.schema.json",
+        "size_bytes": 2158,
+        "sha256": "438ba891c6dd61ff803012e560ae499430d66f45150002e2fa128d026cb16351"
+      },
+      {
+        "path": "assets/job_status.schema.json",
+        "size_bytes": 1398,
+        "sha256": "7f72a8dce7e768a18d21d432b06b916e9e1b3f5aca1c2740497ad059144743f2"
+      },
+      {
+        "path": "assets/lease.schema.json",
+        "size_bytes": 967,
+        "sha256": "1081a4f9b68e54c6a5c5effe50dd1e9c96e618b7373eb87debe3244f652d7859"
+      },
+      {
+        "path": "assets/model_config.schema.json",
+        "size_bytes": 8950,
+        "sha256": "30e876f936b664c7500c794c03e4d39672c60a028788a5ab1abf6e4ba72056ba"
+      },
+      {
+        "path": "assets/model_usage_plan.schema.json",
+        "size_bytes": 4912,
+        "sha256": "bf3c911afe466cd21bb1dfd314b0185a700f74f2c37fbd2db00aa4c607537205"
+      },
+      {
+        "path": "assets/models_manifest.schema.json",
+        "size_bytes": 4434,
+        "sha256": "8913581bdfea4327f31f0d8d827626620ae6e9741afb66212faf77038e2ed238"
+      },
+      {
+        "path": "assets/official_usage_smoke_test.schema.json",
+        "size_bytes": 3398,
+        "sha256": "fbc51b9c8f3a48d3584d9f49b238e05c71ee72d9ee91395c116b6399b5e6b3a0"
+      },
+      {
+        "path": "assets/output_csv_columns.md",
+        "size_bytes": 5013,
+        "sha256": "00a9687a1a28833f913761ea98becd7b3719c88dea54d220f3a2ce471acaf8fa"
+      },
+      {
+        "path": "assets/ranking_config.schema.json",
+        "size_bytes": 1933,
+        "sha256": "6448af1b3b8659124326212a7386e47f2c3805fa26e0cad855b317e8ff39ce43"
+      },
+      {
+        "path": "assets/relaxed_structure_index.schema.json",
+        "size_bytes": 1013,
+        "sha256": "8170fe256c90151b6443731d2d7e38d9fb814dcd0a877cbe890aef5bc12cd8a6"
+      },
+      {
+        "path": "assets/run_manifest.schema.json",
+        "size_bytes": 2541,
+        "sha256": "346b55e9ab3aaf1709532ab0e35deb2be6e558b43fde4974f8209063e95d9bd2"
+      },
+      {
+        "path": "assets/run_state.schema.json",
+        "size_bytes": 5533,
+        "sha256": "086416af4b83b05bd30c7e51ced5e470dd87e3959848065f5e3580404f0087a2"
+      },
+      {
+        "path": "assets/runtime_provenance.schema.json",
+        "size_bytes": 4609,
+        "sha256": "2a9e28b97600e14dd0fd0bd08630c67ef8d66268ab02fb9e994919e170718672"
+      },
+      {
+        "path": "assets/script_calculator_isolation.schema.json",
+        "size_bytes": 1513,
+        "sha256": "ab826861872bb8c7116e1fea9753a5702b86a8462a7b59f754f1a6bed9958803"
+      },
+      {
+        "path": "assets/vasp_profile.schema.json",
+        "size_bytes": 4230,
+        "sha256": "f2d874f5c96ddae6da2031065f67f0ef1e40e68b1bebe474ef3169c0456a99e7"
+      },
+      {
+        "path": "README.md",
+        "size_bytes": 10505,
+        "sha256": "c44fa8d36c35e4a754628247790c681fd69938dbf8e70f633548463ac95d028d"
+      },
+      {
+        "path": "references/catalysis-aware-selection.md",
+        "size_bytes": 10341,
+        "sha256": "31d767db442059cbd4641ea6bc8fd891a75ff55a9dd5afb8a84400a867d3a334"
+      },
+      {
+        "path": "references/derivation_source_manifest.json",
+        "size_bytes": 14924,
+        "sha256": "ad562513d612e282cb2b34c477bc72c11814336d9d854af18aebad1c5743a8d4"
+      },
+      {
+        "path": "references/dft-vasp-reference.md",
+        "size_bytes": 8745,
+        "sha256": "a1fa75f5ac26dc938a44facbd3e38553fb45018fcf5df8f284e050e22ad6e3d5"
+      },
+      {
+        "path": "references/evaluation-cases.md",
+        "size_bytes": 7694,
+        "sha256": "161af731928cc51678df239432f7d69d52c52fd2d2f5b7e940a306db68288602"
+      },
+      {
+        "path": "references/model-ranking.md",
+        "size_bytes": 4125,
+        "sha256": "3970032198a5fc53975feb226ffcf5407df780aa01783b0c89068830dc4b9de5"
+      },
+      {
+        "path": "references/model-selection-report.md",
+        "size_bytes": 8612,
+        "sha256": "1bf0be1ffb1aa4b8732e229648c343602c2aaa269a250561ae5e2e2be695d17a"
+      },
+      {
+        "path": "references/relaxed-structure-classification.md",
+        "size_bytes": 2241,
+        "sha256": "b20b1ab378d17da1e230bc085f3ed2b661bb7c25e6afd947a3b65a3fdc239355"
+      },
+      {
+        "path": "references/release_freeze_manifest.json",
+        "size_bytes": 14875,
+        "sha256": "a6a3809ca6bdb67d9860dd257c053b41396fc543006a9429f08421184a4b310e"
+      },
+      {
+        "path": "references/request-model-selection.md",
+        "size_bytes": 3100,
+        "sha256": "fe078efbf3b046873a228c5f15db23551de4414e2cb67f607bc2df7c832e7a13"
+      },
+      {
+        "path": "references/runtime-compatibility.md",
+        "size_bytes": 3888,
+        "sha256": "71c3c32e0778a24783e8c52ef5ca66fbd862a30e1d56d0a77bb3c03f31712b0b"
+      },
+      {
+        "path": "references/step0-workdir.md",
+        "size_bytes": 4110,
+        "sha256": "1a27b1e5a947522115f7a831d15dd8774f36f4605ed714eac9f4d39a92646e4e"
+      },
+      {
+        "path": "references/step1-inputs.md",
+        "size_bytes": 11999,
+        "sha256": "f165e48210ff043e9c7a99494dd1e26fa23c7c42cc5d1ce69ad36a11e7b5b584"
+      },
+      {
+        "path": "references/step2-browser-dom-extraction.md",
+        "size_bytes": 4031,
+        "sha256": "0ca3bf4f89598e8ff898e39c5b3c18a933a95cfef254603094378b0f724d1fbe"
+      },
+      {
+        "path": "references/step2-leaderboard.md",
+        "size_bytes": 10281,
+        "sha256": "40d77ca513a9ba612b0765a537e7a804d0473c9a435c4a740eda5123af7c1e02"
+      },
+      {
+        "path": "references/step3-model-run.md",
+        "size_bytes": 28372,
+        "sha256": "ef53b9faf378c5505290161e155de7cc8e647ceb00b001a815f10ba247a6a8b5"
+      },
+      {
+        "path": "references/step3-script-calculator-integrity.md",
+        "size_bytes": 7550,
+        "sha256": "ee9d28217099a941f41227511acc137652e20cfdc97e4ebdd2b3874cecf27346"
+      },
+      {
+        "path": "references/step4-merge.md",
+        "size_bytes": 7760,
+        "sha256": "74686c03a9e5adab48ccb850384588d4d390c42bace536490ebad3abd6fb3902"
+      },
+      {
+        "path": "references/step5-final-audit.md",
+        "size_bytes": 8184,
+        "sha256": "4450db581dc5cf43784657dc98c194299cf415c451eac27b50c55602c4fb2be1"
+      },
+      {
+        "path": "scripts/audit_completion.py",
+        "size_bytes": 9840,
+        "sha256": "4fe878f0ab46f0e6ff30eaf9e3566c7d78d91ce3cddd0b3b67e2c2f7f8ef090f"
+      },
+      {
+        "path": "scripts/catalysis_selection.py",
+        "size_bytes": 16620,
+        "sha256": "8b0455f75f3009e2aa3d3821f0ac5b23f5a0b53ec16d92c3b5b6bd8672342e0f"
+      },
+      {
+        "path": "scripts/catalysis_selection_self_test.py",
+        "size_bytes": 9566,
+        "sha256": "207c840834fe090e8df8e9993c4fb9c934d829c10a8c1ee6c36d721674a76353"
+      },
+      {
+        "path": "scripts/catalysis_test_support.py",
+        "size_bytes": 3830,
+        "sha256": "5389bd20e07ed670cd42fc6a2ecae6cfbdc9aaa8eb67ec3d4b3d219b360f6ca0"
+      },
+      {
+        "path": "scripts/classify_relaxed_frame.py",
+        "size_bytes": 4207,
+        "sha256": "09702dd881025455a6a30c87a1c769787a5f7bbaae8c8257dda045bbe0069c39"
+      },
+      {
+        "path": "scripts/classify_relaxed_frame_self_test.py",
+        "size_bytes": 1794,
+        "sha256": "c0229d1f8558d88536b2052db871bb9d40733c3a9690dbc4b27edcfd70528b3b"
+      },
+      {
+        "path": "scripts/common.py",
+        "size_bytes": 31945,
+        "sha256": "d330ef9c39b72b7af66e9075ffd1c033e06fe10ed23a7a687ef5120369b208ee"
+      },
+      {
+        "path": "scripts/dft_reference_control.py",
+        "size_bytes": 81789,
+        "sha256": "57ffec17429a0e5fd0605aec234d3271add97c806f881318d98af34c1108eecc"
+      },
+      {
+        "path": "scripts/dft_self_test.py",
+        "size_bytes": 14310,
+        "sha256": "7501ac81d17ba95b4d2dc61391d036e440becf4ef2836bd81a7c25715cc6170c"
+      },
+      {
+        "path": "scripts/environment_install_control.py",
+        "size_bytes": 11330,
+        "sha256": "6f0df02a0c551204dcf0ce524b6857fa3fadc0ae12bc1e0c2d64af7174db28f2"
+      },
+      {
+        "path": "scripts/environment_preparation_control.py",
+        "size_bytes": 19407,
+        "sha256": "225b3fb2472ac61875bf384cc1379e1dc0ba50f9cd17570173af12b5fd8e5072"
+      },
+      {
+        "path": "scripts/environment_preparation_self_test.py",
+        "size_bytes": 3120,
+        "sha256": "1ffa25f346f8823fa39e3a063426223d4c24836954af5683312ffd26436f034a"
+      },
+      {
+        "path": "scripts/frame_artifact_self_test.py",
+        "size_bytes": 3772,
+        "sha256": "f7557ee30d02172f94c2fc89780240b83ee8e707e771572001e106c36e68dec0"
+      },
+      {
+        "path": "scripts/gpu_runtime_probe.py",
+        "size_bytes": 4408,
+        "sha256": "d6ad787e62df3ac0b3d497a7c8f1c2ca87bebc2a0dbeb0535e58eb8d388a3b03"
+      },
+      {
+        "path": "scripts/merge_benchmark_results.py",
+        "size_bytes": 21317,
+        "sha256": "02d73cfa0cc5ddb59c7e77d02e74f29a8d013b6b60c2204d59cd4fccbfd64bee"
+      },
+      {
+        "path": "scripts/model_selection_report.py",
+        "size_bytes": 28019,
+        "sha256": "7c99687e662b00562f83a2627671e3017a5fc8189a0d2fccb83eaca4ff7121ea"
+      },
+      {
+        "path": "scripts/model_selection_report_self_test.py",
+        "size_bytes": 13397,
+        "sha256": "3c8d68d61a8f1a8fd9dba29cfbb1aca26db4d7f31be3bed9309a627bd700ef2d"
+      },
+      {
+        "path": "scripts/model_usage_control.py",
+        "size_bytes": 17888,
+        "sha256": "6308c226d039255248679287ba703cad9bad20fd537c1f43b6db417efbfade1b"
+      },
+      {
+        "path": "scripts/model_usage_self_test.py",
+        "size_bytes": 6463,
+        "sha256": "46390ab3a633f3e8138c5ba8b9cbdda178d8f4faedec2213669f7e2f33e79adf"
+      },
+      {
+        "path": "scripts/pareto_robust_model_comparison.py",
+        "size_bytes": 283,
+        "sha256": "7d09889c93f057a902c25dd599bdea8736faa0fd9842d19402237a7bd23d4cbb"
+      },
+      {
+        "path": "scripts/probe_environment.py",
+        "size_bytes": 4192,
+        "sha256": "e50015510938d23b4d477344bd3296db63033621f3123866669b5bf6e0e5110f"
+      },
+      {
+        "path": "scripts/rank_models.py",
+        "size_bytes": 15571,
+        "sha256": "8a80eca13357a349ad9b08ddac63aa53c74b19c9b379e391ae4d100c2a935638"
+      },
+      {
+        "path": "scripts/rank_models_self_test.py",
+        "size_bytes": 8231,
+        "sha256": "5d7d84a0edfedbcba8e756077f0f229032161dc35c4716dabde5ecbb2952d85a"
+      },
+      {
+        "path": "scripts/relaxed_poscar_self_test.py",
+        "size_bytes": 1428,
+        "sha256": "38e297b0f16a0109483bde97eb5bb1109491b6e6a1574729675c470bd30c8c93"
+      },
+      {
+        "path": "scripts/relaxed_structure_classification.py",
+        "size_bytes": 14300,
+        "sha256": "a47ed4a1f0887aae2224766483a1906df83c931645dcab9bb32d968a3837dcf4"
+      },
+      {
+        "path": "scripts/relaxed_structure_classification_self_test.py",
+        "size_bytes": 2989,
+        "sha256": "1aa33be9d500e36d9c200fb9fd67484bd0d5e4b60000af55819da2648b13c811"
+      },
+      {
+        "path": "scripts/run_control.py",
+        "size_bytes": 56320,
+        "sha256": "0781ef8b6b5ea6be20c16aafc5471abeff2c5c7893da6ee63a838d449715b951"
+      },
+      {
+        "path": "scripts/self_test.py",
+        "size_bytes": 14791,
+        "sha256": "fb42936b37979a354f5e1455beec833869188e250e687ef787e695707321493d"
+      },
+      {
+        "path": "scripts/structure_input_self_test.py",
+        "size_bytes": 3033,
+        "sha256": "b97c6366eaaf8e2cea57214e39425056cf60df1c12ecccd7bfb966fc2fa00881"
+      },
+      {
+        "path": "scripts/validate_run.py",
+        "size_bytes": 51304,
+        "sha256": "94e6765231cd009bee83551ccfa35171b922eb5195fa41d2740bf4f3877cfd91"
+      },
+      {
+        "path": "scripts/validate_skill.py",
+        "size_bytes": 2271,
+        "sha256": "e3400b21382ecb29ca95a7941217417a428b79b76c722d9ac0c886cc7abcbf48"
+      },
+      {
+        "path": "SKILL.md",
+        "size_bytes": 19843,
+        "sha256": "29fdb784a50908a40519e0ad843e475d4fcdf72c59eddbc8656e8b58a46dbe70"
+      }
+    ]
+  },
+  "changes": [
+    "Standalone CatQC skill root",
+    "Full original SP dataset and common reliable Relax subset",
+    "Pending SP completion blocks scores and final acceptance",
+    "Unconfirmed PBE defaults, explicit component preview and hash-bound user selection",
+    "Effective INCAR/KPOINTS consistency and profile/input drift gates"
+  ]
+}

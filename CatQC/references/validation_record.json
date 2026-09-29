@@ -1,0 +1,218 @@
+{
+  "release": "20260929-catqc-dft-defaults-full-sp",
+  "derived_from": "20260920-autocata-catqc-english",
+  "validated_at": "2026-09-29T09:22:40.443533+00:00",
+  "python": "E:\\mamba\\python.exe",
+  "python_version": "3.12.6 | packaged by conda-forge | (main, Sep 22 2024, 14:01:26) [MSC v.1941 64 bit (AMD64)]",
+  "passed": true,
+  "checks": [
+    {
+      "name": "validate_skill",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Skill package validation passed"
+      ]
+    },
+    {
+      "name": "skill_creator_quick_validate",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Skill is valid!"
+      ]
+    },
+    {
+      "name": "catalysis_selection_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Catalysis selection self-test passed (26 scenario groups)"
+      ]
+    },
+    {
+      "name": "catqc_identity_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "CatQC identity/path/language self-test passed (6 scenario groups)"
+      ]
+    },
+    {
+      "name": "classify_relaxed_frame_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "relaxed frame adapter self-test passed"
+      ]
+    },
+    {
+      "name": "dft_defaults_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "DFT defaults self-test passed (actual ASE files, preview, customization, charge/spin, resume and invalidation)"
+      ]
+    },
+    {
+      "name": "dft_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "DFT self-test passed"
+      ]
+    },
+    {
+      "name": "environment_preparation_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "environment preparation self-test passed"
+      ]
+    },
+    {
+      "name": "frame_artifact_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "frame artifact self-test passed"
+      ]
+    },
+    {
+      "name": "full_sp_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Full SP self-test passed (coverage, repair, cohort, numerical and stale evidence gates)"
+      ]
+    },
+    {
+      "name": "model_selection_report_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Model selection report self-test passed (22 scenario groups)"
+      ]
+    },
+    {
+      "name": "model_usage_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "model usage self-test passed"
+      ]
+    },
+    {
+      "name": "rank_models_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Weighted ranking self-test passed (17 scenario groups)"
+      ]
+    },
+    {
+      "name": "relaxed_poscar_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "Relax POSCAR self-test passed"
+      ]
+    },
+    {
+      "name": "relaxed_structure_classification_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "relaxed structure classification self-test passed"
+      ]
+    },
+    {
+      "name": "self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "v4 run-control self-test passed"
+      ]
+    },
+    {
+      "name": "structure_input_self_test",
+      "exit_code": 0,
+      "passed": true,
+      "summary": [
+        "structure input self-test passed"
+      ]
+    }
+  ],
+  "source_release_unchanged_during_validation": true,
+  "test_scope": "Synthetic local fixtures only; no real model inference, installations, downloads or DFT submissions.",
+  "source_release_verified_against_original_zip": true,
+  "tested_code_and_schema_sha256": {
+    "assets/benchmark_config.schema.json": "dd2b93a1e20b3cbb47c406e1b49fc5128602a20ed1b623d5806b83ce4492a2cb",
+    "assets/catalysis_selection.schema.json": "917d25e07a3c815f1ff4cb851478ec318d435185076be42bd4f792c323efcc79",
+    "assets/checkpoint_manifest.schema.json": "af86fe0551b548760a764ee3440e98b68c7ca8377e44315cd5e8d11b0f6701ec",
+    "assets/dft_checkpoint.schema.json": "cde5ecad9106e2300df3d5c97c20b8b4f6ef7681cb4ef07437d2915c5cd9db5d",
+    "assets/dft_execution_preflight.schema.json": "43a7d39cd9b0acdb313372a989ef6da815a4958fe75ada46ac9d1d2fb5fe5fff",
+    "assets/dft_execution_profile.schema.json": "9775d2a8b887bec164532d9f731dd19ffd0698e836cd9d74dc2482525cb89ab6",
+    "assets/dft_job_status.schema.json": "54b35b86ea2977984b47f882acfce47cfe0e04a793e9504a1fb7b2e95b00c7ea",
+    "assets/dft_manifest.schema.json": "1ba7bcdf1c6e76714987cfb2ecf35710fe5f77cabb140bba6673ca0733299d66",
+    "assets/dft_output_diagnostics.schema.json": "638b38c7200e2d8cd068e33d8d6a0465d4693d23e6e38276ce97224f17bdf026",
+    "assets/dft_runtime_probe.schema.json": "9317b32662fbf5bcee2c03e71090f8b4eae8a78c7d02f827160d204e48976ee3",
+    "assets/dft_scheduler_evidence.schema.json": "59760a64da43e1b796ee6e7da7364528927651f285ba5b7c3f5be9a37a2776c3",
+    "assets/dft_state.schema.json": "e32aa4fda16a9880e89bd47bd16c3217a40b877437c4ec4fd90bbcb40ed19481",
+    "assets/environment_execution.schema.json": "ce348cf2a254f0046a90b377dd152f2f3cdcdc75397356da882084ec26343867",
+    "assets/environment_preparation.schema.json": "210f5d220d29269d087e012cfc1cfdde686ab4e1aedf1a32a12c956059a48f7b",
+    "assets/frame_artifact_manifest.schema.json": "f9405da50faeb2ef09b7c1cb7db6794f07e373955ccb438c4ad16aba887cd626",
+    "assets/frame_checkpoint.schema.json": "4fb30ca3b62b2312839f3d9f5bee567e1917b1d3d67a93e7040553a46244e573",
+    "assets/job_status.schema.json": "7fba82d242c0602ff995655f7f475cc7854178c31bf0f0976e34770f5742836b",
+    "assets/lease.schema.json": "7d11b298ee901b992c12c4a66cae6a58e60b52b5da323d411141fe11758216b1",
+    "assets/model_config.schema.json": "30e876f936b664c7500c794c03e4d39672c60a028788a5ab1abf6e4ba72056ba",
+    "assets/model_usage_plan.schema.json": "bf3c911afe466cd21bb1dfd314b0185a700f74f2c37fbd2db00aa4c607537205",
+    "assets/models_manifest.schema.json": "8913581bdfea4327f31f0d8d827626620ae6e9741afb66212faf77038e2ed238",
+    "assets/official_usage_smoke_test.schema.json": "fbc51b9c8f3a48d3584d9f49b238e05c71ee72d9ee91395c116b6399b5e6b3a0",
+    "assets/output_csv_columns.md": "00a9687a1a28833f913761ea98becd7b3719c88dea54d220f3a2ce471acaf8fa",
+    "assets/ranking_config.schema.json": "6448af1b3b8659124326212a7386e47f2c3805fa26e0cad855b317e8ff39ce43",
+    "assets/relaxed_structure_index.schema.json": "da4d11546413e91829d75b93aa4f3000ef86a03ba4540f2b58283e9bce401fc2",
+    "assets/run_manifest.schema.json": "f989b155daac2b9f3f3da860e8b56df36ef42db86a5a0eccd76c8cc7fe8fe790",
+    "assets/run_state.schema.json": "656363d4b962abaa88ac64d86a351edb8f040c5b8bc448b09d3d01c799259852",
+    "assets/runtime_provenance.schema.json": "2a9e28b97600e14dd0fd0bd08630c67ef8d66268ab02fb9e994919e170718672",
+    "assets/script_calculator_isolation.schema.json": "5d3c934d5f51c55c15ce1580fd11cf82ee2528f0f1b999342322be240ecdb017",
+    "assets/vasp_defaults.json": "6a03630ec5aa1ce465ef09678ef3624161ac607a5c1f3eb98108f3a63b26dd03",
+    "assets/vasp_profile.schema.json": "f2c24d816f3d0da6227e34125a70aeb9a345ff7122de21924cc6063a5f42ede9",
+    "scripts/audit_completion.py": "31c8966b9bd755f286a85f9aa139afe19de38e3c6484f3f83abd2c02ffeeacce",
+    "scripts/catalysis_selection.py": "2383cdb37e49ed78ce4cf17e7d14845103cbeb5ab427f4e0d303973d31e1bf36",
+    "scripts/catalysis_selection_self_test.py": "d6f290a88a764b5be00dca769c59cae7fb58a062f3b77b7a723c0bab4530981c",
+    "scripts/catalysis_test_support.py": "2b47bab9c116b65ede71ccf4c1876232e90f9046e7da7751c118fa6d4b7261b7",
+    "scripts/catqc_identity_self_test.py": "9e3614b4532cf6e61504474049f65af09e9fc8f0b11c338f2a532b0d27513f12",
+    "scripts/classify_relaxed_frame.py": "6278875e1c62f0288db8b597a06514027055e1f3905fba1deaff4d2c3cd48712",
+    "scripts/classify_relaxed_frame_self_test.py": "200d9e4494fe9800f49131b34356ccc9533061c6ee47d0f644e4d66f0b005099",
+    "scripts/common.py": "d330ef9c39b72b7af66e9075ffd1c033e06fe10ed23a7a687ef5120369b208ee",
+    "scripts/dft_defaults_self_test.py": "6eb9a0844a1deb5606092f84263dd085a2cb24d300718f9c4c5a41344a4aa266",
+    "scripts/dft_profile.py": "51114b37f98c78585568bbf03eceb847e0a5ca5f5d1730e581696f312d0633c2",
+    "scripts/dft_reference_control.py": "d5b6bdacfeb8bb912f0ba28f5433749b8e8159cd05c23678b287e9356161ccf6",
+    "scripts/dft_self_test.py": "126c1ded12d6d679e432a19f5fced9016e7cf2a41945bf077c221487273d4add",
+    "scripts/environment_install_control.py": "5b63b20662faafeadc411e217255dcaa3de0ba5dbdc6df110019265c384e19f9",
+    "scripts/environment_preparation_control.py": "cebd7c9f86b39c79a4d97363c987c921761a9eba04ba52a884fefcbea8fb2b79",
+    "scripts/environment_preparation_self_test.py": "e183004b2f8ba87cf3eb4ee10a0c1d055fb0758da003297972effb001b43a052",
+    "scripts/frame_artifact_self_test.py": "6cc333b1e32a5d248e3c129ba03a948d9171abd45348d975fec33a14274df3f2",
+    "scripts/full_sp_self_test.py": "0515166a91398fd1e9bb07d0ad3dcaaf008f23cacee50bb08f01feb215800e20",
+    "scripts/gpu_runtime_probe.py": "9894f42f80980952695b422e5cc9544c02c957bb6b98fbc4b993c3f933bc25b9",
+    "scripts/merge_benchmark_results.py": "493496776160500ec756dbea2b696eb83cee3ab5eebee39445975e37e8a3dc76",
+    "scripts/model_selection_report.py": "cba0b7ef76ce0f2de9eadd8dda857ec34ac6b64272b94a80983c4556c26be020",
+    "scripts/model_selection_report_self_test.py": "17def75f3ef4d1065a3f5c14cb7a6d1ce2eb30974c4eff8473f739c718c46e2a",
+    "scripts/model_usage_control.py": "6308c226d039255248679287ba703cad9bad20fd537c1f43b6db417efbfade1b",
+    "scripts/model_usage_self_test.py": "23e95883df68aae5360eacfbf22d52b9d3aafe4cfb7653ad46ab054941edf709",
+    "scripts/pareto_robust_model_comparison.py": "7d09889c93f057a902c25dd599bdea8736faa0fd9842d19402237a7bd23d4cbb",
+    "scripts/probe_environment.py": "d8f3e5406129fab24c3178498575dbbbc64f1e10074738f4c91f08c2df06d5a5",
+    "scripts/rank_models.py": "9f6e5583c65b41e85762a17530144da90e9f55c06b217de513717e88070287f2",
+    "scripts/rank_models_self_test.py": "5770f95f1cdea50ebb2cfaedeac340fbe4a3ec2ff8ed92c16e5644154646ddc1",
+    "scripts/relaxed_poscar_self_test.py": "78a2db8ecc4049663c46bf7850f83ddbd80f53f42f6ddde20223008cc897b69a",
+    "scripts/relaxed_structure_classification.py": "7ddaa60ddb32ad12eea3929647e798a02af1c978566bac57882c034d5c730f76",
+    "scripts/relaxed_structure_classification_self_test.py": "69d4b2a9da6b9038bcd5f5ee022d9c1133a893c418d1d72467be6dc625d936e0",
+    "scripts/run_control.py": "d5d3062a444c52235a22e1be9f600a347ff53911c6bbabfcbeaeae999f7f6bd0",
+    "scripts/self_test.py": "10bf93df8a19dbe9e919c79c3b92aa6c6b65abd81264149a9433659032783572",
+    "scripts/structure_input_self_test.py": "371e382e729aa1b2011b9419d2454d9868780bc19573f54d5d37bcbb4a0b3ce2",
+    "scripts/validate_run.py": "aa59ab2619e71de71be76e4d89a2abf3ca59caab7800e2fee00ddd1b5acc194b",
+    "scripts/validate_skill.py": "599d298df13a2b84c7e1c9d3adbb7f2e9788e6c5c7a8d1508ee8f5b654a488d2"
+  },
+  "scope": "Synthetic local regressions, including ASE-generated VASP files. No real model inference, VASP execution, cluster submission or GitHub operations."
+}

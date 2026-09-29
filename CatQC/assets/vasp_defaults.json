@@ -1,0 +1,83 @@
+{
+  "schema_version": 4,
+  "profile_id": "catqc-pbe-defaults-20260929",
+  "confirmed": false,
+  "confirmed_by": null,
+  "confirmed_at": null,
+  "incar": {
+    "GGA": "PE",
+    "ENCUT": 520,
+    "EDIFF": 1e-05,
+    "NELM": 200,
+    "IBRION": 2,
+    "ISIF": 2,
+    "NSW": 500,
+    "POTIM": 0.5,
+    "EDIFFG": -0.05,
+    "PREC": "Accurate",
+    "LREAL": false,
+    "LASPH": true,
+    "ISMEAR": 0,
+    "SIGMA": 0.05,
+    "ISPIN": 2,
+    "IVDW": 0,
+    "LDIPOL": false
+  },
+  "kpoints": {
+    "mode": "explicit_grid",
+    "grid": [
+      2,
+      2,
+      1
+    ],
+    "shift": [
+      0,
+      0,
+      0
+    ]
+  },
+  "energy_source": "energy_sigma_to_zero",
+  "output_validation": {
+    "energy_tolerance_eV": 1e-05
+  },
+  "relaxation": {
+    "fixed_cell": true,
+    "force_threshold_eV_per_A": 0.05,
+    "max_ionic_steps": 500,
+    "slab_constraint_rule": "fix_bottom_1_layer_for_n_layers_lte_5_else_bottom_2_layers",
+    "layer_tolerance_A": 0.2
+  },
+  "isolated_adsorbate": {
+    "vacuum_A": 10,
+    "charge": 0,
+    "spin_multiplicity": null,
+    "gamma_only": true,
+    "pbc": true
+  },
+  "potcar_generation": {
+    "backend": null,
+    "functional_family": "PAW-PBE",
+    "dataset_version": null,
+    "element_labels": {}
+  },
+  "components": {
+    "slab_adsorbate": {
+      "charge": 0,
+      "ispin": 2,
+      "initial_magmoms_by_element": null,
+      "incar": {}
+    },
+    "clean_slab": {
+      "charge": 0,
+      "ispin": 2,
+      "initial_magmoms_by_element": null,
+      "incar": {}
+    },
+    "isolated_adsorbate": {
+      "charge": 0,
+      "ispin": 2,
+      "initial_magmoms_by_element": null,
+      "incar": {}
+    }
+  }
+}

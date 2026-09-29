@@ -1,0 +1,467 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vasp_profile.schema.json",
+  "title": "User-confirmed VASP DFT reference profile v4",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "confirmed",
+    "confirmed_by",
+    "confirmed_at",
+    "incar",
+    "kpoints",
+    "energy_source",
+    "output_validation",
+    "relaxation",
+    "isolated_adsorbate",
+    "potcar_generation",
+    "components",
+    "confirmation_sha256",
+    "selection_provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 4
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confirmed": {
+      "const": true
+    },
+    "confirmed_by": {
+      "const": "user"
+    },
+    "confirmed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "incar": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "kpoints": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "explicit_grid",
+            "literal",
+            "gamma_only"
+          ]
+        },
+        "grid": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "shift": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "literal_lines": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "energy_source": {
+      "enum": [
+        "energy_sigma_to_zero",
+        "free_energy_toten"
+      ]
+    },
+    "output_validation": {
+      "type": "object",
+      "required": [
+        "energy_tolerance_eV"
+      ],
+      "properties": {
+        "energy_tolerance_eV": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "relaxation": {
+      "type": "object",
+      "required": [
+        "fixed_cell",
+        "force_threshold_eV_per_A",
+        "max_ionic_steps",
+        "slab_constraint_rule",
+        "layer_tolerance_A"
+      ],
+      "properties": {
+        "fixed_cell": {
+          "const": true
+        },
+        "force_threshold_eV_per_A": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_ionic_steps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "slab_constraint_rule": {
+          "const": "fix_bottom_1_layer_for_n_layers_lte_5_else_bottom_2_layers"
+        },
+        "layer_tolerance_A": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "isolated_adsorbate": {
+      "type": "object",
+      "required": [
+        "vacuum_A",
+        "charge",
+        "spin_multiplicity",
+        "gamma_only",
+        "pbc"
+      ],
+      "properties": {
+        "vacuum_A": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "charge": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "spin_multiplicity": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "gamma_only": {
+          "const": true
+        },
+        "pbc": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "potcar_generation": {
+      "type": "object",
+      "required": [
+        "backend",
+        "functional_family",
+        "element_labels",
+        "dataset_version"
+      ],
+      "properties": {
+        "backend": {
+          "enum": [
+            "vaspkit",
+            "direct"
+          ]
+        },
+        "functional_family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "element_labels": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.+-]+$"
+          }
+        },
+        "potcar_root": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "vaspkit_executable": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "vaspkit_task": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "vaspkit_input_lines": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "validated_vaspkit_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "vaspkit_version_command": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dataset_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valence_electrons_by_element": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "valence_source": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "backend": {
+                "const": "direct"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "potcar_root"
+            ],
+            "properties": {
+              "potcar_root": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "backend": {
+                "const": "vaspkit"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "vaspkit_executable",
+              "vaspkit_task",
+              "vaspkit_input_lines",
+              "validated_vaspkit_version",
+              "vaspkit_version_command"
+            ],
+            "properties": {
+              "vaspkit_executable": {
+                "type": "string",
+                "minLength": 1
+              },
+              "vaspkit_input_lines": {
+                "type": "array"
+              },
+              "validated_vaspkit_version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "vaspkit_version_command": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "components": {
+      "type": "object",
+      "required": [
+        "slab_adsorbate",
+        "clean_slab",
+        "isolated_adsorbate"
+      ],
+      "properties": {
+        "slab_adsorbate": {
+          "type": "object",
+          "required": [
+            "charge",
+            "ispin",
+            "initial_magmoms_by_element"
+          ],
+          "properties": {
+            "charge": {
+              "type": "number"
+            },
+            "ispin": {
+              "enum": [
+                1,
+                2
+              ]
+            },
+            "initial_magmoms_by_element": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "incar": {
+              "type": "object"
+            },
+            "initial_magmoms": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "clean_slab": {
+          "type": "object",
+          "required": [
+            "charge",
+            "ispin",
+            "initial_magmoms_by_element"
+          ],
+          "properties": {
+            "charge": {
+              "type": "number"
+            },
+            "ispin": {
+              "enum": [
+                1,
+                2
+              ]
+            },
+            "initial_magmoms_by_element": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "incar": {
+              "type": "object"
+            },
+            "initial_magmoms": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "isolated_adsorbate": {
+          "type": "object",
+          "required": [
+            "charge",
+            "ispin",
+            "initial_magmoms_by_element"
+          ],
+          "properties": {
+            "charge": {
+              "type": "number"
+            },
+            "ispin": {
+              "enum": [
+                1,
+                2
+              ]
+            },
+            "initial_magmoms_by_element": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "incar": {
+              "type": "object"
+            },
+            "initial_magmoms": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "minItems": 1,
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "confirmation_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "selection_provenance": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,371 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model_config.schema.json",
+  "title": "Per-model benchmark configuration v4",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "model_key",
+    "model_name",
+    "selection_index",
+    "snapshot_rank",
+    "environment",
+    "resources",
+    "checkpoint_storage",
+    "scripts",
+    "calculator_isolation",
+    "official_usage",
+    "scientific_exceptions",
+    "status",
+    "execution_variant"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 4
+    },
+    "model_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selection_index": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "snapshot_rank": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "policy",
+        "framework",
+        "python_executable",
+        "package_versions",
+        "runtime_profile",
+        "runtime_provenance_path"
+      ],
+      "properties": {
+        "policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "framework": {
+          "enum": [
+            "pytorch",
+            "tensorflow",
+            "jax",
+            "other"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "python_executable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "package_versions": {
+          "type": "object",
+          "minProperties": 1
+        },
+        "runtime_profile": {
+          "type": "object"
+        },
+        "runtime_provenance_path": {
+          "type": "string",
+          "pattern": "^models/[^/\\\\]+/validation/runtime_provenance\\.json$"
+        },
+        "created_by_benchmark": {
+          "type": "boolean"
+        },
+        "shared_with": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compatibility_basis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "resources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "checkpoint_storage": {
+      "type": "object",
+      "required": [
+        "directory",
+        "manifest_path",
+        "provider_cache_directory",
+        "verified",
+        "source_kind",
+        "files"
+      ],
+      "properties": {
+        "directory": {
+          "type": "string",
+          "pattern": "^models/[^/\\\\]+/checkpoints/?$"
+        },
+        "manifest_path": {
+          "type": "string",
+          "pattern": "^models/[^/\\\\]+/checkpoints/checkpoint_manifest\\.json$"
+        },
+        "provider_cache_directory": {
+          "type": "string",
+          "pattern": "^models/[^/\\\\]+/checkpoints/provider_cache/?$"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "source_kind": {
+          "enum": [
+            "downloaded",
+            "user_provided",
+            "preexisting_verified"
+          ]
+        },
+        "original_source_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "size_bytes",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "scripts": {
+      "type": "object",
+      "required": [
+        "model_specific",
+        "shared_executable_runner",
+        "delegates_to_shared_runner",
+        "owns_model_import",
+        "owns_checkpoint_loading",
+        "owns_calculator_factory",
+        "owns_frame_loop",
+        "single_point_path",
+        "relaxation_path"
+      ],
+      "properties": {
+        "model_specific": {
+          "const": true
+        },
+        "shared_executable_runner": {
+          "const": false
+        },
+        "delegates_to_shared_runner": {
+          "const": false
+        },
+        "owns_model_import": {
+          "const": true
+        },
+        "owns_checkpoint_loading": {
+          "const": true
+        },
+        "owns_calculator_factory": {
+          "const": true
+        },
+        "owns_frame_loop": {
+          "const": true
+        },
+        "single_point_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "single_point_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "relaxation_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relaxation_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "calculator_isolation": {
+      "type": "object",
+      "required": [
+        "fresh_calculator_objects",
+        "immutable_weight_reuse",
+        "reuse_mutable_state",
+        "separate_relax_components",
+        "order_invariance_probe",
+        "validation_path"
+      ],
+      "properties": {
+        "fresh_calculator_objects": {
+          "const": true
+        },
+        "immutable_weight_reuse": {
+          "enum": [
+            "forbidden",
+            "probe_required",
+            "validated"
+          ]
+        },
+        "reuse_mutable_state": {
+          "const": false
+        },
+        "separate_relax_components": {
+          "const": true
+        },
+        "order_invariance_probe": {
+          "const": true
+        },
+        "validation_path": {
+          "type": "string",
+          "pattern": "^models/[^/\\\\]+/validation/script_calculator_isolation\\.json$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "official_usage": {
+      "type": "object",
+      "required": [
+        "guide_paths",
+        "guide_sha256",
+        "plan_path",
+        "plan_sha256",
+        "plan_file_sha256",
+        "smoke_test_path",
+        "script_generation_verified",
+        "runtime_verified",
+        "official_smoke_test_passed"
+      ],
+      "properties": {
+        "guide_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^models/[^/\\]+/resources/official_guides/"
+          }
+        },
+        "guide_sha256": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "plan_path": {
+          "type": "string",
+          "pattern": "^models/[^/\\]+/resources/model_usage_plan\\.json$"
+        },
+        "plan_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "plan_file_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "smoke_test_path": {
+          "type": "string",
+          "pattern": "^models/[^/\\]+/validation/official_usage_smoke_test\\.json$"
+        },
+        "script_generation_verified": {
+          "const": true
+        },
+        "runtime_verified": {
+          "const": true
+        },
+        "official_smoke_test_passed": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "scientific_exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "runtime_metadata": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "ready",
+        "running",
+        "complete",
+        "partial_approved",
+        "blocked",
+        "failed",
+        "skipped"
+      ]
+    },
+    "execution_variant": {
+      "$ref": "catalysis_selection.schema.json#/$defs/execution_variant"
+    }
+  },
+  "additionalProperties": false
+}

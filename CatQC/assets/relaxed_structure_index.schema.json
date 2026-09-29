@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "relaxed_structure_index.schema.json",
+  "title": "Final per-frame Relax POSCAR index v4",
+  "type": "object",
+  "required": [
+    "model_key", "structure_index", "status", "converged",
+    "source_frame_manifest", "source_structure_sha256", "poscar_path",
+    "poscar_sha256", "dissociation_status", "error_message"
+  ],
+  "properties": {
+    "model_key": { "type": "string", "minLength": 1 },
+    "structure_index": { "type": "integer", "minimum": 0 },
+    "status": { "type": "string", "minLength": 1 },
+    "converged": { "type": ["boolean", "string"] },
+    "source_frame_manifest": { "type": "string" },
+    "source_structure_sha256": { "type": "string", "pattern": "^$|^[0-9a-f]{64}$" },
+    "poscar_path": { "type": "string" },
+    "poscar_sha256": { "type": "string", "pattern": "^$|^[0-9a-f]{64}$" },
+    "dissociation_status": { "type": "string" },
+    "error_message": { "type": "string" }
+  },
+  "additionalProperties": false
+}

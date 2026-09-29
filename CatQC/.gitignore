@@ -1,0 +1,26 @@
+# Runtime artifacts and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+benchmark_runs/
+.validation-work/
+*.log
+*.tmp
+*.tar.gz
+*.zip
+# Model weights and licensed VASP data
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+POTCAR
+POTCAR.*
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

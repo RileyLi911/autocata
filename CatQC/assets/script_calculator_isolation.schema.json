@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "script_calculator_isolation.schema.json",
+  "title": "Per-model script and calculator isolation evidence v2",
+  "type": "object",
+  "required": [
+    "schema_version", "model_key", "passed", "script_records",
+    "fresh_calculator_objects", "reuse_mutable_state", "separate_relax_components",
+    "distinct_object_identities", "calculator_factory_call_count",
+    "order_invariance_passed"
+  ],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "model_key": { "type": "string", "minLength": 1 },
+    "passed": { "const": true },
+    "script_records": {
+      "type": "object",
+      "properties": {
+        "single_point": { "$ref": "#/$defs/scriptRecord" },
+        "relaxation": { "$ref": "#/$defs/scriptRecord" }
+      },
+      "additionalProperties": false
+    },
+    "fresh_calculator_objects": { "const": true },
+    "reuse_mutable_state": { "const": false },
+    "separate_relax_components": { "const": true },
+    "distinct_object_identities": { "const": true },
+    "calculator_factory_call_count": { "type": "integer", "minimum": 2 },
+    "order_invariance_passed": { "const": true }
+  },
+  "$defs": {
+    "scriptRecord": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

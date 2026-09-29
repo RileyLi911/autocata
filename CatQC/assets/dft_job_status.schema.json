@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dft_job_status.schema.json",
+  "title": "DPDispatcher VASP job status v4",
+  "type": "object",
+  "required": ["schema_version", "run_id", "calculation_id", "backend", "state", "job_id", "pid", "submit_time", "last_checked", "worker_status_path"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "calculation_id": { "type": "string", "minLength": 1 },
+    "backend": { "const": "dpdispatcher" },
+    "state": { "enum": ["pending", "queued", "running", "scheduler_terminal", "output_diagnostic_stop", "completed", "failed", "cancelled", "preempted", "out_of_memory", "external_timeout", "unknown"] },
+    "job_id": { "type": ["string", "integer", "null"] },
+    "pid": { "type": ["integer", "null"] },
+    "submit_time": { "type": ["string", "null"] },
+    "last_checked": { "type": "string", "minLength": 1 },
+    "worker_status_path": { "type": ["string", "null"] },
+    "scheduler_evidence": { "type": ["object", "null"] }
+    ,"exit_code": { "type": ["integer", "null"] }
+    ,"signal": { "type": ["integer", "string", "null"] }
+    ,"failure_class": { "type": ["string", "null"] }
+    ,"diagnostic_path": { "type": ["string", "null"] }
+    ,"termination_reason": { "type": ["string", "null"] }
+    ,"termination_source": { "type": ["string", "null"] }
+    ,"external_scheduler_state": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

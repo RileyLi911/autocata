@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dft_execution_profile.schema.json",
+  "title": "Secret-free DPDispatcher execution profile v4",
+  "type": "object",
+  "required": ["schema_version", "backend", "credentials_policy", "machine", "resources", "vasp_command", "forward_files", "backward_files", "runtime_preflight", "resource_policy", "timeout_policy", "output_monitor"],
+  "properties": {
+    "schema_version": { "const": 4 },
+    "backend": { "const": "dpdispatcher" },
+    "credentials_policy": { "const": "external_only" },
+    "dpdispatcher_version": { "type": ["string", "null"] },
+    "machine": { "type": "object", "minProperties": 1 },
+    "resources": { "type": "object", "minProperties": 1 },
+    "vasp_command": { "type": "string", "minLength": 1 },
+    "runtime_preflight": {
+      "type": "object",
+      "required": ["stack_limit_policy", "apply_in_submission_shell", "apply_in_job_shell", "verify_after_launch", "mpi_launcher", "mpi_version_command", "vasp_version_command"],
+      "properties": {
+        "stack_limit_policy": { "enum": ["required_unlimited", "probe_then_confirm", "unchanged"] },
+        "apply_in_submission_shell": { "type": "boolean" },
+        "apply_in_job_shell": { "type": "boolean" },
+        "verify_after_launch": { "type": "boolean" },
+        "mpi_launcher": { "type": "string", "minLength": 1 },
+        "mpi_version_command": { "type": "string", "minLength": 1 },
+        "vasp_version_command": { "type": "string", "minLength": 1 },
+        "scheduler_probe_commands": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "resource_policy": {
+      "type": "object",
+      "required": ["cpu_per_task", "max_concurrent_tasks", "oversubscription"],
+      "properties": {
+        "cpu_per_task": { "type": "integer", "minimum": 1 },
+        "max_concurrent_tasks": { "type": "integer", "minimum": 1 },
+        "oversubscription": { "const": "forbidden" }
+      },
+      "additionalProperties": false
+    },
+    "timeout_policy": {
+      "type": "object",
+      "required": ["dft_walltime", "dft_per_calculation_timeout", "dft_idle_timeout", "automatic_timeout_cancel"],
+      "properties": {
+        "dft_walltime": { "const": "none" },
+        "dft_per_calculation_timeout": { "const": "none" },
+        "dft_idle_timeout": { "const": "none" },
+        "automatic_timeout_cancel": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "output_monitor": {
+      "type": "object",
+      "required": ["enabled", "poll_interval_seconds", "termination_rules", "electronic_oscillation"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "poll_interval_seconds": { "type": "integer", "minimum": 1 },
+        "termination_rules": {
+          "type": "object",
+          "required": ["fatal_process_error", "electronic_oscillation", "corrupted_output", "missing_output"],
+          "properties": {
+            "fatal_process_error": { "type": "boolean" },
+            "electronic_oscillation": { "enum": ["disabled", "user_confirmed"] },
+            "corrupted_output": { "type": "boolean" },
+            "missing_output": { "const": false }
+          },
+          "additionalProperties": false
+        },
+        "electronic_oscillation": {
+          "type": "object",
+          "required": ["enabled", "window_steps", "minimum_observed_steps", "required_pattern", "action"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "window_steps": { "type": "integer", "minimum": 1 },
+            "minimum_observed_steps": { "type": "integer", "minimum": 1 },
+            "required_pattern": { "type": "string", "minLength": 1 },
+            "action": { "const": "terminate_and_block" },
+            "marker_patterns": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "forward_files": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "backward_files": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+  },
+  "additionalProperties": false
+}

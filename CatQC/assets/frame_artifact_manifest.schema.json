@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "frame_artifact_manifest.schema.json",
+  "title": "Independent per-structure execution artifact v4",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "model_key",
+    "task",
+    "structure_index",
+    "input_structure_sha256",
+    "status",
+    "lifecycle",
+    "outputs",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 4
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task": {
+      "enum": [
+        "single_point",
+        "relaxation"
+      ]
+    },
+    "structure_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "input_structure_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "input": {
+      "type": "object"
+    },
+    "model": {
+      "type": "object"
+    },
+    "environment": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed",
+        "unconverged"
+      ]
+    },
+    "attempt_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": [
+        "calculator_created",
+        "calculator_fresh",
+        "calculator_released",
+        "cleanup_completed"
+      ],
+      "properties": {
+        "calculator_created": {
+          "const": true
+        },
+        "calculator_fresh": {
+          "const": true
+        },
+        "calculator_released": {
+          "const": true
+        },
+        "cleanup_completed": {
+          "const": true
+        },
+        "calculator_object_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "mutable_state_reused": {
+          "const": false
+        },
+        "gpu_cache_cleared": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "outputs": {
+      "type": "object"
+    },
+    "error": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "relaxation": {
+      "type": "object"
+    },
+    "created_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "updated_at": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "execution_variant",
+          "calculator_initializations"
+        ],
+        "properties": {
+          "execution_variant": {
+            "$ref": "catalysis_selection.schema.json#/$defs/execution_variant"
+          },
+          "calculator_initializations": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": [
+                "component",
+                "execution_variant",
+                "calculator_class",
+                "object_id",
+                "inspection_method",
+                "inspection",
+                "checkpoint_path",
+                "checkpoint_sha256"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

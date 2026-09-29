@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "models_manifest.schema.json",
+  "title": "Immutable frozen model identity manifest v4",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "model_selection_mode",
+    "frozen_at",
+    "model_count",
+    "selection_source",
+    "models",
+    "selection_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 4
+    },
+    "model_selection_mode": {
+      "enum": [
+        "matbench_top_n",
+        "user_specified"
+      ]
+    },
+    "frozen_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "selection_source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selection_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "size_bytes",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^selection_evidence/"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "selection_index",
+          "snapshot_rank",
+          "requested_name",
+          "model_key",
+          "model_name",
+          "version_or_variant",
+          "identity_url",
+          "source_kind",
+          "license",
+          "resources",
+          "confirmed",
+          "confirmed_by",
+          "confirmed_at",
+          "source_evidence",
+          "identity_sha256",
+          "execution_variant",
+          "catalysis_assessment",
+          "leaderboard_identity"
+        ],
+        "properties": {
+          "selection_index": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "snapshot_rank": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "requested_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "model_key": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "model_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version_or_variant": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "identity_url": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "license": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "confirmed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "confirmed_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confirmed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_evidence": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "identity_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "execution_variant": {
+            "$ref": "catalysis_selection.schema.json#/$defs/execution_variant"
+          },
+          "catalysis_assessment": {
+            "$ref": "catalysis_selection.schema.json#/$defs/catalysis_assessment"
+          },
+          "leaderboard_identity": {
+            "$ref": "catalysis_selection.schema.json#/$defs/leaderboard_identity"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

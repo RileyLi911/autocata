@@ -5,8 +5,9 @@ import argparse
 import csv
 import json
 import shutil
-import html
 from pathlib import Path
+
+from structure_view import load_view, project_view
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +18,7 @@ def parse_args():
     parser.add_argument("--success-summary", required=True, help="Path to workflow success_summary.csv.")
     parser.add_argument("--output-dir", required=True, help="Viewer output directory.")
     parser.add_argument("--title", default="Accepted Structures", help="Viewer page title.")
+    parser.add_argument("--adsorbate", default="", help="Fallback formula for legacy single-adsorbate CSV files.")
     return parser.parse_args()
 
 
@@ -52,7 +54,7 @@ def safe_name(value):
     return "".join(keep).strip("_") or "structure"
 
 
-def copy_structures(rows, structures_dir):
+def copy_structures(rows, structures_dir, adsorbate=""):
     structures_dir.mkdir(parents=True, exist_ok=True)
     manifest = []
 
@@ -70,6 +72,12 @@ def copy_structures(rows, structures_dir):
         destination = structures_dir / destination_name
         shutil.copy2(source, destination)
         xyz_text = source.read_text(encoding="utf-8")
+        atoms, mask = load_view(source, {"_adsorbate": adsorbate, **row})
+        positions = project_view(atoms.positions, mask, 30.0)
+        display_xyz = f"{len(atoms)}\nOriented display copy\n" + "\n".join(
+            f"{symbol} {x:.12f} {y:.12f} {z:.12f}"
+            for symbol, (x, y, z) in zip(atoms.get_chemical_symbols(), positions)
+        ) + "\n"
 
         manifest.append(
             {
@@ -85,6 +93,7 @@ def copy_structures(rows, structures_dir):
                 "F_max": row.get("F_max", ""),
                 "natoms": row.get("natoms", ""),
                 "xyz": xyz_text,
+                "display_xyz": display_xyz,
             }
         )
 
@@ -97,7 +106,8 @@ def write_json(path, data):
 
 
 def write_html(path, title, manifest):
-    embedded_data = html.escape(json.dumps(manifest), quote=False)
+    # Script elements are raw text: HTML entities would corrupt JSON strings.
+    embedded_data = json.dumps(manifest).replace("<", "\\u003c")
     html_template = """<!doctype html>
 <html lang="en">
 <head>
@@ -386,7 +396,8 @@ def write_html(path, title, manifest):
       downloadLink.href = blobUrl;
       downloadLink.dataset.url = blobUrl;
       state.viewer.clear();
-      state.viewer.addModel(xyz, "xyz");
+      state.viewer.addModel(item.display_xyz || xyz, "xyz");
+      state.viewer.setView([0, 0, 0, 0, 0, 0, 0, 1]);
       applyStyle();
     }
 
@@ -408,6 +419,7 @@ def write_html(path, title, manifest):
         btn.addEventListener("click", () => setStyle(btn.dataset.style));
       });
       document.getElementById("resetView").addEventListener("click", () => {
+        state.viewer.setView([0, 0, 0, 0, 0, 0, 0, 1]);
         state.viewer.zoomTo();
         state.viewer.render();
       });
@@ -439,7 +451,7 @@ def main():
     structures_dir = output_dir / "structures"
 
     rows = read_rows(success_summary)
-    manifest = copy_structures(rows, structures_dir)
+    manifest = copy_structures(rows, structures_dir, args.adsorbate)
     output_dir.mkdir(parents=True, exist_ok=True)
     write_json(output_dir / "manifest.json", manifest)
     write_html(output_dir / "index.html", args.title, manifest)

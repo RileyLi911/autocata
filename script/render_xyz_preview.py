@@ -12,8 +12,7 @@ try:
     from PIL import Image, ImageDraw, ImageFont
     from ase.data import covalent_radii
     from ase.data.colors import jmol_colors
-    from ase.formula import Formula
-    from ase.io import read
+    from structure_view import load_view, prepare_view, project_view
 except ImportError as exc:
     raise SystemExit(
         "Preview rendering requires ASE, NumPy, and Pillow. "
@@ -170,35 +169,6 @@ def load_font(size, bold=False):
     return ImageFont.load_default()
 
 
-def rotate_positions(positions, azimuth_deg, tilt_deg=58.0):
-    azimuth = math.radians(azimuth_deg)
-    tilt = math.radians(tilt_deg)
-    rz = np.array(
-        [
-            [math.cos(azimuth), -math.sin(azimuth), 0.0],
-            [math.sin(azimuth), math.cos(azimuth), 0.0],
-            [0.0, 0.0, 1.0],
-        ]
-    )
-    rx = np.array(
-        [
-            [1.0, 0.0, 0.0],
-            [0.0, math.cos(tilt), -math.sin(tilt)],
-            [0.0, math.sin(tilt), math.cos(tilt)],
-        ]
-    )
-    return positions @ rz.T @ rx.T
-
-
-def atom_count_from_formula(formula):
-    if not formula:
-        return 0
-    try:
-        return sum(Formula(str(formula)).count().values())
-    except (ValueError, TypeError):
-        return 0
-
-
 def bond_pairs(positions, numbers):
     pairs = []
     for left in range(len(positions)):
@@ -227,7 +197,9 @@ def row_label(row):
     return sample, f"{material} | {adsorbate} | {energy_text}"
 
 
-def render_frame(atoms, row, azimuth_deg, width, height):
+def render_frame(atoms, row, azimuth_deg, width, height, adsorbate=None):
+    if adsorbate is None:
+        atoms, adsorbate = prepare_view(atoms, row)
     background = (247, 249, 247)
     image = Image.new("RGB", (width, height), background)
     draw = ImageDraw.Draw(image)
@@ -237,7 +209,7 @@ def render_frame(atoms, row, azimuth_deg, width, height):
 
     positions = atoms.get_positions().astype(float)
     positions -= positions.mean(axis=0)
-    transformed = rotate_positions(positions, azimuth_deg)
+    transformed = project_view(positions, adsorbate, azimuth_deg)
     numbers = atoms.get_atomic_numbers()
     atomic_radii = np.array([max(0.45, covalent_radii[number]) for number in numbers])
 
@@ -272,10 +244,6 @@ def render_frame(atoms, row, azimuth_deg, width, height):
             width=max(2, int(scale * 0.055)),
         )
 
-    adsorbate_formula = row.get("adsorbate_formula") or row.get("_adsorbate", "")
-    n_adsorbate = min(len(atoms), atom_count_from_formula(adsorbate_formula))
-    adsorbate_start = len(atoms) - n_adsorbate
-
     for index in np.argsort(transformed[:, 2]):
         number = numbers[index]
         rgb = tuple(int(round(channel * 255)) for channel in jmol_colors[number])
@@ -294,17 +262,17 @@ def render_frame(atoms, row, azimuth_deg, width, height):
             (x - radius * 0.48, y - radius * 0.50, x - radius * 0.48 + highlight, y - radius * 0.50 + highlight),
             fill=lighten(rgb, 0.62),
         )
-        if n_adsorbate and index >= adsorbate_start:
+        if adsorbate[index]:
             halo = radius + 3
             draw.ellipse((x - halo, y - halo, x + halo, y + halo), outline=(13, 145, 102), width=3)
 
-    if n_adsorbate:
+    if np.any(adsorbate):
         draw.text((20, height - 36), "Adsorbate atoms outlined in green", fill=(13, 120, 87), font=small_font)
     return image
 
 
 def render_row(row, rank, output_dir, args):
-    atoms = read(row["_source"], format="xyz")
+    atoms, adsorbate_mask = load_view(row["_source"], row)
     sample = row.get("sample_id") or Path(row["_source"]).stem
     adsorbate = row.get("_adsorbate") or "adsorbate"
     material = row.get("material") or "material"
@@ -312,13 +280,13 @@ def render_row(row, rank, output_dir, args):
     png_path = output_dir / f"{stem}.png"
     gif_path = output_dir / f"{stem}.gif"
 
-    poster = render_frame(atoms, row, 30.0, args.image_width, args.image_height)
+    poster = render_frame(atoms, row, 30.0, args.image_width, args.image_height, adsorbate_mask)
     poster.save(png_path, format="PNG", optimize=True)
 
     if not args.no_gif:
         frame_count = max(4, args.frames)
         frames = [
-            render_frame(atoms, row, 360.0 * index / frame_count, args.image_width, args.image_height)
+            render_frame(atoms, row, 360.0 * index / frame_count, args.image_width, args.image_height, adsorbate_mask)
             for index in range(frame_count)
         ]
         frames[0].save(

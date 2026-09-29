@@ -373,6 +373,44 @@ workflow:
     gif: true
 ```
 
+Previews and the browser gallery share `script/structure_view.py`. ASE reads
+extended XYZ cell/PBC metadata. Adsorbates are identified from OC20 tags (2),
+or from the formula-validated trailing atoms used by AutoCata. The slab normal
+comes from the nonperiodic direction of a 2D-periodic cell, the largest slab
+vacuum gap of a fully periodic cell, or a best-fit plane for cell-free XYZ.
+Periodic display images are made contiguous before the adsorption side is
+chosen. A proper rotation places that side above the slab; the original XYZ
+and downloaded coordinates are unchanged. GIF frames rotate about this normal.
+The usual 58-degree tilt is increased toward a side view when lateral offsets
+would otherwise place the adsorbate below the slab in projection. Colors,
+image sizes, atom radii and labels are unchanged.
+
+The guarantee applies to an identifiable slab with adsorbates on one side.
+For adsorbates overlapping the slab's height range, the projected adsorbate
+center is kept above the slab center; a rigid rotation cannot make embedded
+atoms or adsorbates on opposite surfaces all lie above every slab atom.
+Missing identity or a centered, ambiguous adsorption side raises an explicit
+error (recorded per structure in the preview manifest). Plain XYZ cannot recover
+periodic information that was not saved: use extended XYZ for wrapped systems.
+The browser initial view and Reset use the same orientation; users can still
+rotate the structure freely afterward.
+
+To re-render existing results without generation, inference or MLP, use a new
+output directory and supply the formula for older single-adsorbate CSV files:
+
+```bash
+conda activate autocata
+python script/render_xyz_preview.py --success-summary outputs/workflows/RUN/success_summary.csv --adsorbate CH3 --output-dir outputs/workflows/VIEW_CHECK/structure_previews --max-structures 3
+python script/build_structure_gallery.py --success-summary outputs/workflows/RUN/success_summary.csv --adsorbate CH3 --output-dir outputs/workflows/VIEW_CHECK/viewer
+python -m unittest discover -s tests -v
+```
+
+Replace `RUN`, `VIEW_CHECK` and `CH3` with the existing run, a fresh output
+directory and the actual adsorbate formula. These two rendering commands never
+invoke the workflow runners. The lightweight tests exercise rotated slabs,
+multiple faces/thicknesses/species, bottom adsorption, wrapped/skew cells,
+distance preservation, PNG/GIF output and gallery serialization.
+
 For reaction-network runs, the same keys live under
 `reaction_workflow.preview`. Only materials marked
 `all_adsorbates_passed: true` are selected for reaction-network previews.

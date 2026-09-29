@@ -612,6 +612,8 @@ def main():
             [
                 sys.executable,
                 "script/build_structure_gallery.py",
+                "--adsorbate",
+                adsorbate_context.get("formula", adsorbate),
                 "--success-summary",
                 run_dir / "success_summary.csv",
                 "--output-dir",

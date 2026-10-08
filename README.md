@@ -15,6 +15,7 @@ The project currently supports:
 - common-material aggregation through `material_adsorbate_matrix.csv`
 - desktop 3D viewing of accepted structures through `viewer/index.html`
 - headless PNG and rotating GIF previews that can be attached to chat results
+- independent MACE/CHGNet total-energy and force scoring of existing XYZ files
 
 ## Default Agent Behavior
 
@@ -280,6 +281,20 @@ relevant workflow config before editing files or running commands. Read
 config/model_assets.yml before model setup. Respond in English by default.
 ```
 
+For MACE/CHGNet scoring of existing structures, use the task-specific route in
+[SKILL.md](SKILL.md): read [AGENTS.md](AGENTS.md),
+[MLP_check/README.md](MLP_check/README.md), and the selected backend config and
+environment file. Call `MLP_check/score_structures.py` directly. This mode uses
+separate environments and does not require generation-model setup or rerunning
+the generation/OC20 workflow. Its total energies must not be substituted for
+the workflow's `E_pred` adsorption-energy filters.
+
+Example requests an agent can handle:
+
+- "Dry-run MACE scoring on the first five structures in this success CSV."
+- "Score these existing XYZ files with CHGNet on CPU and save a new report."
+- "Compare MACE and CHGNet on the same five structures; retain original results."
+
 For natural-language reaction requests, the agent should:
 
 1. infer likely adsorbate intermediates;
@@ -310,6 +325,8 @@ acceptable as long as the agent preserves the AutoCata operating rules.
 
 ## More Documentation
 
+- [MLP_check/README.md](MLP_check/README.md): independent MACE/CHGNet scoring,
+  environment setup, CLI examples, units and model limitations
 - `README_config.md`: config-driven training, generation, XYZ conversion, MLP
   scoring details
 - `README_workflow.md`: single-adsorbate and reaction-network workflow details

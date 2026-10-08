@@ -1,0 +1,9 @@
+mlp_scoring:
+  backend: chgnet
+  model: "0.3.0"
+  checkpoint: null
+  device: cpu
+  pbc: preserve
+  success_summary: outputs/workflows/ch3_ni_20_v2/success_summary.csv
+  output_dir: outputs/workflows/ch3_ni_20_v2/mlp_comparison/chgnet_run_001
+  max_files: 5

@@ -1,6 +1,6 @@
 ---
 name: autocata-workflow
-description: Agent-ready AutoCata workflow for adsorbate-conditioned catalyst structure generation, OC20 MLP screening, and multi-adsorbate reaction-network common-material aggregation. Use when Codex needs to set up the AutoCata conda environment from envs/autocata.yml, download required model assets from Hugging Face using script/download_models.py and config/model_assets.yml, convert natural-language catalysis or electrochemical reaction requests into workflow configs, choose available adsorbates from config/adsorbates.yml, run dry-runs or confirmed local workflows, inspect CSV/JSON reports, and summarize accepted structures/material coverage in English.
+description: Operate AutoCata catalyst structure generation, OC20 screening, reaction-network shared-material searches, and independent MACE or CHGNet scoring of existing XYZ results. Use for workflow configuration, environment/model setup, dry-runs, requested calculations, and interpretation of CSV/JSON reports. MACE/CHGNet scoring produces total energies and forces; it does not replace OC20 adsorption-energy filtering.
 ---
 
 # AutoCata Workflow
@@ -24,7 +24,14 @@ English unless the user explicitly requests another language.
 
 ## Required Reading
 
-Before changing configs or running commands, read:
+Read [AGENTS.md](AGENTS.md), then route by the requested task:
+
+- Existing-structure MACE/CHGNet scoring or setup: read
+  [MLP_check/README.md](MLP_check/README.md), the selected
+  [MACE config](config/mlp_mace.yml) or [CHGNet config](config/mlp_chgnet.yml),
+  and its environment file under `envs/`. Follow **Independent MLP Scoring**
+  below; generation-model assets and the adsorbate registry are not required.
+- Structure generation or OC20 workflow screening: read:
 
 ```text
 AGENTS.md
@@ -49,7 +56,11 @@ has changed, or the request conflicts with remembered rules.
 
 ## Environment Bootstrap
 
-Before running workflows, activate the environment:
+This section applies to generation/OC20 workflows. Independent MACE/CHGNet
+scoring uses the separate environments described below; do not download
+generation or OC20 assets for that task.
+
+Before running generation/OC20 workflows, activate the environment:
 
 ```bash
 conda activate autocata
@@ -120,6 +131,51 @@ For natural-language reaction requests:
 
 Use the registry `name` for model selection and the registry `formula` for
 adsorbate validation.
+
+## Independent MLP Scoring
+
+Use this mode for requests such as "Score the existing CH3 structures with
+MACE" or "Compare MACE and CHGNet on these XYZ files." Use
+`MLP_check/score_structures.py` directly, without invoking either workflow
+runner. Setup-only, documentation-only, and dry-run-only requests do not imply
+permission to run inference. If calculation is already requested, carry it
+out after validating the dry-run without asking for redundant confirmation.
+
+1. Select the requested backend and existing `success_summary.csv`,
+   `all_success_structures.csv`, or XYZ directory. The example configs contain
+   a particular restored run: replace its input/output paths with the user's
+   actual targets. For model comparisons, use the same structures for both.
+2. Use `autocata-mace` / `envs/mlp_mace.yml` or
+   `autocata-chgnet` / `envs/mlp_chgnet.yml`. Keep the existing `autocata`
+   environment intact. A path-only dry-run needs no installed model package;
+   see the detailed guide for installation when setup or inference is in scope.
+3. Select a fresh output directory, typically
+   `<existing_run>/mlp_comparison/<backend>_<unique_run>/`. Default to CPU and
+   five structures unless the user specifies a different scope. Full-dataset
+   scoring requires `--all-files`; do not silently truncate a request for all
+   structures to the default five.
+4. Run `python MLP_check/score_structures.py --config config/mlp_mace.yml --dry-run`
+   (or `config/mlp_chgnet.yml`), with the selected paths overridden as needed.
+   Check the selected count, input paths, model and output directory. A dry-run
+   checks configuration/paths, not checkpoint compatibility or model accuracy.
+5. For requested inference, run the same command without `--dry-run`. Read
+   `scores.csv` and `scoring_report.json`, including failures. Report backend,
+   model, units, selected/succeeded/failed counts, PBC and output paths.
+
+Essential interpretation rules:
+
+- Outputs are `E_total_eV`, `E_per_atom_eV`, `F_rms_eV_A`, and `F_max_eV_A`.
+  They are not the existing workflow's `E_pred`; do not apply its energy
+  thresholds, label totals as adsorption energies, or rank different
+  compositions by their raw total energies.
+- The workflow runners still use OC20. A request to replace workflow screening
+  or calculate adsorption energies needs a defined reference-energy scheme
+  and additional implementation; do not invent a backend config switch.
+- Preserve PBC by default. CHGNet requires a full 3D-periodic vacuum cell for
+  slabs; do not silently change PBC to bypass a failure. See the guide for
+  model-specific limitations and explicit overrides.
+- Retain input XYZ and prior results. Distinguish dry-run validation, mock
+  tests and actual model inference when reporting what has been verified.
 
 ## Single-Adsorbate Workflow
 

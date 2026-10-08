@@ -4,6 +4,10 @@ This project is being prepared for agent-driven structure generation workflows.
 Agents should operate through the workflow layer, not by directly editing model
 or checkpoint files.
 
+For explicitly requested MACE/CHGNet scoring of existing structures, the
+supported independent entry point is `MLP_check/score_structures.py`; see
+**Independent MLP Scoring** below. This mode does not invoke generation.
+
 ## Response Language
 
 Use English for all user-facing responses, workflow summaries, tables, and
@@ -23,6 +27,9 @@ an agent should convert the request into `config/workflow_config.yml`, run the
 local workflow, then summarize the generated results.
 
 ## Safe Entry Points
+
+The following setup applies to generation/OC20 workflow commands. For
+MACE/CHGNet, use the separate setup under **Independent MLP Scoring**.
 
 Use the project Conda environment before running workflow commands:
 
@@ -79,8 +86,13 @@ for every production run.
 
 ## Session Bootstrap
 
-For a fresh agent context, read these files before editing configs or running
-commands:
+For a fresh agent context handling independent MACE/CHGNet scoring, read
+`SKILL.md`, this file, [MLP_check/README.md](MLP_check/README.md), and the selected
+`config/mlp_mace.yml` / `config/mlp_chgnet.yml` plus its `envs/` file. That mode
+does not require the generation registry, checkpoints or workflow bootstrap.
+
+For generation/OC20 workflow tasks, read these files before editing configs or
+running commands:
 
 ```text
 SKILL.md
@@ -111,6 +123,32 @@ MLP_check/OC20_MLP/mlp_scores.py
 Agents should not call those lower-level tools directly unless the user asks
 for debugging a specific workflow node.
 
+## Independent MLP Scoring
+
+Read [MLP_check/README.md](MLP_check/README.md) for the maintained installation,
+CLI, PBC and output reference. Use `MLP_check/score_structures.py` directly for
+MACE/CHGNet scoring requests; the lower-level workflow-node restriction above
+does not apply to this supported entry point.
+
+- Use `config/mlp_mace.yml` with `autocata-mace`, or `config/mlp_chgnet.yml` with
+  `autocata-chgnet`. Do not upgrade the OC20 environment for these backends.
+- Select the user's existing structures and a new output directory, normally
+  `<existing_run>/mlp_comparison/<backend>_<unique_run>/`. Example config paths
+  are examples, not defaults to apply to an unrelated user request.
+- Start with `--dry-run`. It never loads models or writes results. Run inference
+  only when it is within the user's requested scope; an already authorized
+  calculation does not need another confirmation. Honor explicit limits;
+  the fallback is CPU and five structures, with `--all-files` for full inputs.
+- Outputs are `scores.csv` and `scoring_report.json`. Report successes,
+  failures, model/backend, energy/force units, PBC and actual output paths.
+- `E_total_eV` and `E_per_atom_eV` are not adsorption energies. Do not feed them
+  into `E_pred` filters or compare different compositions by raw total energy.
+  MACE/CHGNet are independent scorers, not implemented workflow replacements.
+- Preserve PBC unless an appropriate change is part of the requested task.
+  CHGNet requires a full 3D-periodic cell; do not silently override this error.
+- No generation/OC20 model download is needed for this mode. A dry-run or mock
+  test is not evidence that real model inference or physical accuracy passed.
+
 ## Files Agents May Edit
 
 Agents may edit:
@@ -120,9 +158,13 @@ config/workflow_config.yml
 config/reaction_workflow_config.yml
 config/adsorbates.yml
 config/model_assets.yml
+config/mlp_mace.yml
+config/mlp_chgnet.yml
 README_workflow.md
 README_config.md
 AGENTS.md
+SKILL.md
+MLP_check/README.md
 ```
 
 Agents may create new workflow output directories under:

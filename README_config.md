@@ -1,5 +1,11 @@
 # Configuration Usage
 
+Optional MACE and CHGNet single-point scoring uses `config/mlp_mace.yml` and
+`config/mlp_chgnet.yml`, respectively, with `MLP_check/score_structures.py`.
+See [MLP scoring instructions](MLP_check/README.md) for installation, local
+checkpoints, output semantics and dry-run examples. These configs are separate
+from the production OC20 workflow configuration.
+
 Training is driven by `config/config.yml` plus optional CLI overrides.
 
 For agent-facing use, prefer the workflow runners documented in

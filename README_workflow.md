@@ -1,5 +1,11 @@
 # Agent-Ready Workflow
 
+For optional MACE/CHGNet scoring of existing XYZ results, see
+[MLP_check/README.md](MLP_check/README.md). This independent comparison tool
+does not replace OC20 in the workflow or reuse adsorption-energy thresholds
+for total energies. It supports no-inference dry-runs and separate backend
+environments.
+
 This project can now run the structure-generation pipeline from a single
 workflow config, without using an external agent framework.
 

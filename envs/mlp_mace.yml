@@ -1,0 +1,10 @@
+name: autocata-mace
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - "mace-torch>=0.3.10,<0.4"
+      - "ase>=3.23,<4"
+      - "pyyaml>=6,<7"
